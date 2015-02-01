@@ -3,14 +3,15 @@ package unpacker;
 import java.io.IOException;
 import java.io.InputStream;
 
+import unpacker.msg.VrouterMsg;
+import unpacker.util.JSONFileUtil;
+
 import com.wk.conv.PacketChannelBuffer;
 import com.wk.conv.config.StructConfig;
 import com.wk.conv.mode.VRouterStandardPackageMode;
-import com.wk.msg.VrouterMsg;
 import com.wk.net.ChannelBufferMsg;
 import com.wk.nio.ChannelBuffer;
 import com.wk.sdo.ServiceData;
-import com.wk.util.JSONFileUtil;
 
 /**
  * @description
@@ -24,6 +25,7 @@ public class SocketReceiver {
 		ServiceData data = VrouterMsg.unpack(new PacketChannelBuffer(createRequestMsg("0673").toChannelBuffer()));
 		System.out.println("******************");
 		String json = JSONFileUtil.convertServiceDataToJson(data);
+		System.out.println(json);
 	}
 	public static void unpack() {
 		VRouterStandardPackageMode vrouter = new VRouterStandardPackageMode("vrouter", false);

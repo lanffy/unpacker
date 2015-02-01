@@ -3,9 +3,10 @@ package unpacker.util;
 import java.io.IOException;
 import java.io.InputStream;
 
+import unpacker.SocketReceiver;
+
 import com.wk.net.ChannelBufferMsg;
 import com.wk.nio.ChannelBuffer;
-import com.wk.pnet.SocketReceiver;
 
 /**
  * @description

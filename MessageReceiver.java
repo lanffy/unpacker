@@ -1,8 +1,9 @@
 package unpacker;
 
-import unpacker.msg.VrouterMsg;
+import unpacker.msg.InbankMsg;
 
 import com.wk.actor.Actor;
+import com.wk.eai.inbank.InbankProtocol;
 import com.wk.net.ChannelBufferMsg;
 import com.wk.net.CommManagers;
 import com.wk.net.Request;
@@ -42,8 +43,8 @@ class ReqActor<T extends ChannelBufferMsg> extends Actor<Request<T>> {
 		ChannelBuffer buffer = request.getRequestMsg().toChannelBuffer();
 		System.out.printf("before unpack:{\n%s\n}",buffer.toHexString());
 		ServiceData data = new ServiceData();
-		data = VrouterMsg.unpack(buffer);
-//		data = InbankMsg.unpack(buffer);
+//		data = VrouterMsg.unpack(buffer);
+		data = InbankMsg.unpack(buffer);
 		System.out.println(data);
 		request.doResponse((T)new ChannelBufferMsg(buffer));
 	}
