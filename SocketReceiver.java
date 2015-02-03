@@ -30,20 +30,6 @@ public class SocketReceiver {
 	public static void unpack() {
 		VRouterStandardPackageMode vrouter = new VRouterStandardPackageMode("vrouter", false);
 		StructConfig response = new StructConfig(vrouter, false);
-//		FieldMode str_ebcd = Modes.getFieldMode("string");
-//		response.putChild(new FieldConfig("I1SBNO", FieldType.FIELD_STRING, 10, str_ebcd));
-//		response.putChild(new FieldConfig("I1WSNO", FieldType.FIELD_STRING, 0, str_ebcd));
-//		response.putChild(new FieldConfig("I1AUUS", FieldType.FIELD_STRING, 0, str_ebcd));
-//		response.putChild(new FieldConfig("I1TRCD", FieldType.FIELD_STRING, 4, str_ebcd));
-//		response.putChild(new FieldConfig("I1NGAM", FieldType.FIELD_STRING, 0, str_ebcd));
-//		response.putChild(new FieldConfig("I1AUPS", FieldType.FIELD_STRING, 0, str_ebcd));
-//		response.putChild(new FieldConfig("I1ECRS", FieldType.FIELD_STRING, 0, str_ebcd));
-//		response.putChild(new FieldConfig("I1ORTS", FieldType.FIELD_STRING, 10, str_ebcd));
-//		response.putChild(new FieldConfig("I1YSQM", FieldType.FIELD_STRING, 0, str_ebcd));
-//		response.putChild(new FieldConfig("I1TRAM", FieldType.FIELD_STRING, 0, str_ebcd));
-//		response.putChild(new FieldConfig("I1CZRQ", FieldType.FIELD_STRING, 8, str_ebcd));
-//		response.putChild(new FieldConfig("I1USID", FieldType.FIELD_STRING, 6, str_ebcd));
-//		ChannelBuffer buffer = createRequestMsg("0052").toChannelBuffer();
 		ChannelBuffer buffer = createRequestMsg("0673").toChannelBuffer();
 		System.out.println(buffer.toHexString());
 		System.out.println("******************");

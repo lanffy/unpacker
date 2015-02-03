@@ -88,7 +88,7 @@ public class SimulateMsg {
 		// 字段名
 		buffer.putBytes(attr_name.getBytes());
 		// 字段类型  长字节流
-		buffer.putByte((byte) 0x12);
+		buffer.putByte((byte) 0x0C);
 		// 字段值长度
 		buffer.putShort((short) len);
 		// 字段值

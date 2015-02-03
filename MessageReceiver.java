@@ -3,6 +3,8 @@ package unpacker;
 import unpacker.msg.DefaultMsg;
 
 import com.wk.actor.Actor;
+import com.wk.logging.Log;
+import com.wk.logging.LogFactory;
 import com.wk.net.ChannelBufferMsg;
 import com.wk.net.CommManagers;
 import com.wk.net.Request;
@@ -16,6 +18,9 @@ import com.wk.sdo.ServiceData;
  * @version 2015年1月16日 下午7:48:05
  */
 public class MessageReceiver {
+	
+	private Log logger = LogFactory.getLog("Resolve");
+	
 	public static void main(String[] args) throws Exception {
 		new MessageReceiver();
 		System.out.println("listening");
@@ -42,11 +47,13 @@ class ReqActor<T extends ChannelBufferMsg> extends Actor<Request<T>> {
 		ChannelBuffer buffer = request.getRequestMsg().toChannelBuffer();
 		int len = buffer.getInt();
 		System.out.printf("before unpack,buffer length:{%d},buffer:{\n%s\n}",len, buffer.toHexString());
+		logger.info("收到报文,报文长度:[{}],报文:{}", len, buffer.toHexString());
 		ServiceData data = new ServiceData();
 //		data = VrouterMsg.unpack(buffer);
 //		data = InbankMsg.unpack(buffer);
 		data = DefaultMsg.unpack(buffer);
 		System.out.println(data);
+		logger.info("第一次拆包:{}", data);
 		request.doResponse((T)new ChannelBufferMsg(buffer));
 	}
 }

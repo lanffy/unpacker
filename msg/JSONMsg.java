@@ -2,7 +2,6 @@ package unpacker.msg;
 
 import com.wk.conv.PacketChannelBuffer;
 import com.wk.conv.config.StructConfig;
-import com.wk.conv.mode.JSONPackageMode;
 import com.wk.conv.mode.Modes;
 import com.wk.conv.mode.PackageMode;
 import com.wk.nio.ChannelBuffer;

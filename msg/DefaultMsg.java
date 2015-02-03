@@ -13,12 +13,7 @@ import com.wk.sdo.ServiceData;
  * @version 2015年2月2日 下午7:33:55
  */
 public class DefaultMsg {
-	/**
-	* @description 
-	* @param buffer
-	* @return
-	* @version 2015年1月20日 上午12:21:06
-	*/
+	
 	public static ServiceData unpack(ChannelBuffer buffer) {
 		ServiceData data = new ServiceData();
 		PackageMode mode = new VRouterPackageMode();
