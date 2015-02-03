@@ -1,9 +1,8 @@
 package unpacker;
 
-import unpacker.msg.InbankMsg;
+import unpacker.msg.DefaultMsg;
 
 import com.wk.actor.Actor;
-import com.wk.eai.inbank.InbankProtocol;
 import com.wk.net.ChannelBufferMsg;
 import com.wk.net.CommManagers;
 import com.wk.net.Request;
@@ -41,10 +40,12 @@ class ReqActor<T extends ChannelBufferMsg> extends Actor<Request<T>> {
 	@Override
 	protected void act(Request<T> request) {
 		ChannelBuffer buffer = request.getRequestMsg().toChannelBuffer();
-		System.out.printf("before unpack:{\n%s\n}",buffer.toHexString());
+		int len = buffer.getInt();
+		System.out.printf("before unpack,buffer length:{%d},buffer:{\n%s\n}",len, buffer.toHexString());
 		ServiceData data = new ServiceData();
 //		data = VrouterMsg.unpack(buffer);
-		data = InbankMsg.unpack(buffer);
+//		data = InbankMsg.unpack(buffer);
+		data = DefaultMsg.unpack(buffer);
 		System.out.println(data);
 		request.doResponse((T)new ChannelBufferMsg(buffer));
 	}

@@ -15,7 +15,7 @@ import com.wk.nio.ChannelBuffer;
  */
 public class BufferReader {
 	//创建请求报文
-	public static ChannelBufferMsg createRequestMsg(String fileName) {
+	public static ChannelBuffer createRequestMsg(String fileName) {
 		byte[] tempBytes = null;
 		try {
 			InputStream in = SocketReceiver.class.getResourceAsStream(fileName);
@@ -28,6 +28,6 @@ public class BufferReader {
 		}
 		ChannelBuffer buffer = ChannelBuffer.allocate(tempBytes.length);
 		buffer.putBytes(tempBytes);
-		return new ChannelBufferMsg(buffer);
+		return new ChannelBufferMsg(buffer).toChannelBuffer();
 	}
 }
