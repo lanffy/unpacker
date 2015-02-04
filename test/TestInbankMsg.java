@@ -17,18 +17,9 @@ import com.wk.test.TestCase;
  */
 public class TestInbankMsg extends TestCase{
 	
-	public void test_unpack_inbankmsg() {
-		ChannelBuffer buffer = BufferReader.createRequestMsg("8808resp2");
-		Msg inbankMsg = new InbankMsg();
-		inbankMsg.respModeName = "outsys_mode";
-		ServiceData data = inbankMsg.unpackResponse(new PacketChannelBuffer(buffer));
-		assertEquals("AAAAAAA", data.getString("O1MGID"));
-	}
-	
-	public void atest_unpack_inbankmsg_havearray() {
+	public void test_unpack_inbankmsg_havearray() {
 		ChannelBuffer buffer = BufferReader.createRequestMsg("8813resp");
-		Msg inbankMsg = new InbankMsg();
-		inbankMsg.respModeName = "outsys_mode";
+		Msg inbankMsg = new InbankMsg("outsys_mode", "outsys_mode", "outsys_mode");
 		ServiceData data = inbankMsg.unpackResponse(new PacketChannelBuffer(buffer));
 		assertEquals("AAAAAAA", data.getString("O1MGID"));
 	}

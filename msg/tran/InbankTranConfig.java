@@ -12,7 +12,7 @@ import com.wk.sdo.FieldType;
  * @version 2015年2月2日 上午10:55:52
  */
 public class InbankTranConfig {
-	public static void tran8808Config(StructConfig request, StructConfig response, StructConfig error) {
+	public static void tran8808ReqConfig(StructConfig request, PackageMode mode) {
 		//请求报文体
 		request.putChild(new FieldConfig("I1TRCD", FieldType.FIELD_STRING, 4));
 		request.putChild(new FieldConfig("I1SBNO", FieldType.FIELD_STRING, 10));
@@ -21,12 +21,20 @@ public class InbankTranConfig {
 		request.putChild(new FieldConfig("I1AUPS", FieldType.FIELD_STRING, 6));
 		request.putChild(new FieldConfig("I1WSNO", FieldType.FIELD_STRING, 40));
 		request.putChild(new FieldConfig("I1PYNO", FieldType.FIELD_STRING, 4));
-		//响应报文体
+	}
+	
+	public static void tran8808RespConfig(StructConfig response,
+			PackageMode mode) {
+		// 响应报文体
 		response.putChild(new FieldConfig("O1ACUR", FieldType.FIELD_INT, 2));
 		response.putChild(new FieldConfig("O1TRDT", FieldType.FIELD_DOUBLE, 8));
 		response.putChild(new FieldConfig("O1TRTM", FieldType.FIELD_DOUBLE, 6));
 		response.putChild(new FieldConfig("O1TLSQ", FieldType.FIELD_STRING, 10));
 		response.putChild(new FieldConfig("O1DATE", FieldType.FIELD_DOUBLE, 8));
+	}
+	
+	public static void tran8808errConfig(StructConfig error, PackageMode mode) {
+		
 	}
 	
 	public static void tran8813RespConfig(StructConfig response, PackageMode respMode) {

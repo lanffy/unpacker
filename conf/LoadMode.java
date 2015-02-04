@@ -1,14 +1,12 @@
 package unpacker.conf;
 
 import java.io.File;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import unpacker.util.JSONFileUtil;
 
-import com.wk.SystemConfig;
 import com.wk.conv.mode.DefaultPackageMode;
 import com.wk.conv.mode.FieldEndProcessMode;
 import com.wk.conv.mode.FieldMode;
@@ -16,25 +14,19 @@ import com.wk.conv.mode.FieldProcessMode;
 import com.wk.conv.mode.Modes;
 import com.wk.conv.mode.PackageMode;
 import com.wk.lang.SystemException;
-import com.wk.logging.Log;
-import com.wk.logging.LogFactory;
 import com.wk.sdo.FieldType;
 import com.wk.sdo.ServiceData;
 import com.wk.util.BeanUtil;
 import com.wk.util.ClassUtil;
-import com.wk.util.FileUtil;
 
 /**
  * @description 加载模式，包括域模式、包模式、域处理模式、域结束处理模式
  * @author raoliang
  * @version 2015年2月3日 下午1:51:47
  */
-public class LoadMode {
-	private static final Log logger = LogFactory.getLog("unpacker");
+public class LoadMode extends Loader{
 	
 	private static final String modeBasePath = "/unpackerConf/mode/";
-	
-	private static final SystemConfig config = SystemConfig.getInstance();
 	
 	private static final String fieldModePath = config.getProperty("unpacker.fieldModePath", modeBasePath + "fieldMode");
 	private static final String packageModePath = config.getProperty("unpacker.packageModePath", modeBasePath + "packageMode");
@@ -55,10 +47,7 @@ public class LoadMode {
 	}
 	
 	private static void loadFieldMode() {
-		URL url = getFileUrl(fieldModePath);
-		if(url == null)
-			return;
-		List<File> fileList = FileUtil.listAllFiles(new File(url.getFile()));
+		List<File> fileList = getFileList(fieldModePath);
 		for(File file : fileList) {
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
 			FieldMode mode = (FieldMode)getMode(data, file.getAbsolutePath());
@@ -68,10 +57,7 @@ public class LoadMode {
 	}
 	
 	private static void loadPackageMode() {
-		URL url = getFileUrl(packageModePath);
-		if(url == null)
-			return;
-		List<File> fileList = FileUtil.listAllFiles(new File(url.getFile()));
+		List<File> fileList = getFileList(packageModePath);
 		for(File file : fileList) {
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
 			PackageMode mode = (PackageMode)getMode(data, file.getAbsolutePath());
@@ -81,10 +67,7 @@ public class LoadMode {
 	}
 	
 	private static void loadFieldProcessMode() {
-		URL url = getFileUrl(fieldProcessModePath);
-		if(url == null)
-			return;
-		List<File> fileList = FileUtil.listAllFiles(new File(url.getFile()));
+		List<File> fileList = getFileList(fieldProcessModePath);
 		for(File file : fileList) {
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
 			FieldProcessMode mode = (FieldProcessMode)getMode(data, file.getAbsolutePath());
@@ -94,10 +77,7 @@ public class LoadMode {
 	}
 	
 	private static void loadFieldEndProcessMode() {
-		URL url = getFileUrl(fieldEndProcessModePath);
-		if(url == null)
-			return;
-		List<File> fileList = FileUtil.listAllFiles(new File(url.getFile()));
+		List<File> fileList = getFileList(fieldEndProcessModePath);
 		for(File file : fileList) {
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
 			FieldEndProcessMode mode = (FieldEndProcessMode)getMode(data, file.getAbsolutePath());
@@ -155,12 +135,4 @@ public class LoadMode {
 		return mode;
 	}
 	
-	private static URL getFileUrl(String filePath) {
-		URL url = LoadMode.class.getResource(filePath);
-		if(url == null) {
-			logger.warn("文件夹不存在：{}", filePath);
-			return null;
-		}
-		return url;
-	}
 }

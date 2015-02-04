@@ -1,12 +1,14 @@
 package unpacker.msg;
 
 import unpacker.msg.tran.InbankTranConfig;
+import unpacker.util.BufferReader;
 
 import com.wk.conv.PacketChannelBuffer;
 import com.wk.conv.config.FieldConfig;
 import com.wk.conv.config.StructConfig;
 import com.wk.conv.mode.Modes;
 import com.wk.conv.mode.PackageMode;
+import com.wk.nio.ChannelBuffer;
 import com.wk.sdo.FieldType;
 import com.wk.sdo.ServiceData;
 
@@ -17,13 +19,33 @@ import com.wk.sdo.ServiceData;
  */
 public class InbankMsg extends Msg{
 
+	public InbankMsg(String reqModeName, String respModeName, String errModeName) {
+		super(reqModeName, respModeName, errModeName);
+		System.out.println("reqModeName:" + reqModeName);
+		System.out.println("respModeName:" + respModeName);
+		System.out.println("errModeName:" + errModeName);
+		requestMode = getReqPackageMode();
+		responseMode = getRespPackageMode();
+		errorMode = getErrPackageMode();
+	}
+
+	public static void main(String[] args) {
+		test_unpack_inbankmsg();
+	}
+	
+	public static void test_unpack_inbankmsg() {
+		ChannelBuffer buffer = BufferReader.createRequestMsg("8813resp");
+		InbankMsg inbankMsg = new InbankMsg("outsys_mode", "outsys_mode", "outsys_mode");
+		ServiceData data = inbankMsg.unpackResponse(new PacketChannelBuffer(buffer));
+		System.out.println(data.getString("O1MGID"));
+	}
+	
 	@Override
 	public ServiceData unpackRequest(PacketChannelBuffer buffer) {
 		ServiceData data = new ServiceData();
 		//请求报文头
 		StructConfig request = new StructConfig(requestMode, true);
 		
-//		InbankTranConfig.tran8808Config(request, response, error);
 		InbankTranConfig.tran8813ReqConfig(request, requestMode);
 		
 		//拆报文
@@ -36,13 +58,21 @@ public class InbankMsg extends Msg{
 	@Override
 	public ServiceData unpackResponse(PacketChannelBuffer buffer) {
 		ServiceData data = new ServiceData();
+		ServiceData datahead = new ServiceData();
 		//响应报文头
 		StructConfig response = new StructConfig(responseMode, true);
 		response.putChild(new FieldConfig("O1MGID", FieldType.FIELD_STRING, 7));
-		InbankTranConfig.tran8813RespConfig(response, responseMode);
+		
+		response.getPackageMode().unpack(buffer, response, datahead, buffer.readableBytes());
+		System.out.println(datahead);
+		System.out.println("*****************************");
+		
+//		InbankTranConfig.tran8808RespConfig(response, responseMode);
+		StructConfig body = new StructConfig(responseMode, true);
+		InbankTranConfig.tran8813RespConfig(body, responseMode);
 		//拆报文
-		PackageMode response_mode = response.getPackageMode();
-		response_mode.unpack(buffer, response, data, buffer.readableBytes());
+		PackageMode response_mode = body.getPackageMode();
+		response_mode.unpack(buffer, body, data, buffer.readableBytes());
 		System.out.println("after unpack body:\n" + data);
 		return data;
 	}
@@ -62,20 +92,19 @@ public class InbankMsg extends Msg{
 	}
 
 	@Override
-	public PackageMode getReqPackageMode(String reqModeName) {
+	public PackageMode getReqPackageMode() {
 //		return Modes.getPackageMode("outsys_mode");
-		return Modes.getPackageMode(reqModeName);
+		return Modes.getPackageMode(Msg.reqModeName);
 	}
 
 	@Override
-	public PackageMode getRespPackageMode(String respModeName) {
-//		return Modes.getPackageMode("outsys_mode");
-		return Modes.getPackageMode(respModeName);
+	public PackageMode getRespPackageMode() {
+		return Modes.getPackageMode(Msg.respModeName);
 	}
 
 	@Override
-	public PackageMode getErrPackageMode(String errModeName) {
-		return Modes.getPackageMode(errModeName);
+	public PackageMode getErrPackageMode() {
+		return Modes.getPackageMode(Msg.errModeName);
 	}
 	
 }

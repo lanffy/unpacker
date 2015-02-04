@@ -18,37 +18,45 @@ public abstract class Msg {
 		LoadMode.loadMode();
 	}
 	protected final Log logger = LogFactory.getLog("unpacker");
-	public String reqModeName;
-	public String respModeName;
-	public String errModeName;
+	public static String reqModeName;
+	public static String respModeName;
+	public static String errModeName;
+	public Msg(String reqModeName, String respModeName, String errModeName){
+		Msg.reqModeName = reqModeName;
+		Msg.respModeName = respModeName;
+		Msg.errModeName = errModeName;
+	}
 	/**
 	 * 请求包模式
 	 */
-	public PackageMode requestMode = getReqPackageMode(reqModeName);
+//	public PackageMode requestMode = getReqPackageMode(reqModeName);
+	public PackageMode requestMode;
 	/**
 	 * 响应包模式
 	 */
-	public PackageMode responseMode = getRespPackageMode(respModeName);
+//	public PackageMode responseMode = getRespPackageMode(respModeName);
+	public PackageMode responseMode;
 	/**
 	 * 错误包模式
 	 */
-	public PackageMode errorMode = getErrPackageMode(errModeName);
+//	public PackageMode errorMode = getErrPackageMode(errModeName);
+	public PackageMode errorMode;
 	
 	/**
 	* @description 获取请求包模式
 	* @return
 	*/
-	public abstract PackageMode getReqPackageMode(String reqModeName);
+	public abstract PackageMode getReqPackageMode();
 	/**
 	* @description 获取响应包模式
 	* @return
 	*/
-	public abstract PackageMode getRespPackageMode(String respModeName);
+	public abstract PackageMode getRespPackageMode();
 	/**
 	* @description 获取错误包模式
 	* @return
 	*/
-	public abstract PackageMode getErrPackageMode(String errModeName);
+	public abstract PackageMode getErrPackageMode();
 	
 	/**
 	* @description 拆请求报文

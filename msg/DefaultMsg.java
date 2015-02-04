@@ -13,6 +13,14 @@ import com.wk.sdo.ServiceData;
  */
 public class DefaultMsg extends Msg{
 
+	public DefaultMsg(String reqModeName, String respModeName,
+			String errModeName) {
+		super(reqModeName, respModeName, errModeName);
+		requestMode = getReqPackageMode();
+		responseMode = getRespPackageMode();
+		errorMode = getErrPackageMode();
+	}
+
 	public ServiceData unpackRequest(PacketChannelBuffer buffer) {
 		ServiceData data = new ServiceData();
 		StructConfig request = new StructConfig(requestMode, false);
@@ -37,17 +45,17 @@ public class DefaultMsg extends Msg{
 	}
 
 	@Override
-	public PackageMode getReqPackageMode(String reqModeName) {
+	public PackageMode getReqPackageMode() {
 		return new VRouterPackageMode();
 	}
 
 	@Override
-	public PackageMode getRespPackageMode(String respModeName) {
+	public PackageMode getRespPackageMode() {
 		return new VRouterPackageMode();
 	}
 
 	@Override
-	public PackageMode getErrPackageMode(String errModeName) {
+	public PackageMode getErrPackageMode() {
 		return new VRouterPackageMode();
 	}
 }

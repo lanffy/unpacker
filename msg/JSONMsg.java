@@ -13,6 +13,13 @@ import com.wk.sdo.ServiceData;
  */
 public class JSONMsg extends Msg{
 	
+	public JSONMsg(String reqModeName, String respModeName, String errModeName) {
+		super(reqModeName, respModeName, errModeName);
+		requestMode = getReqPackageMode();
+		responseMode = getRespPackageMode();
+		errorMode = getErrPackageMode();
+	}
+
 	@Override
 	public ServiceData unpackRequest(PacketChannelBuffer buffer) {
 		ServiceData data = new ServiceData();
@@ -38,17 +45,17 @@ public class JSONMsg extends Msg{
 	}
 
 	@Override
-	public PackageMode getReqPackageMode(String reqModeName) {
+	public PackageMode getReqPackageMode() {
 		return Modes.getPackageMode("json");
 	}
 
 	@Override
-	public PackageMode getRespPackageMode(String respModeName) {
+	public PackageMode getRespPackageMode() {
 		return Modes.getPackageMode("json");
 	}
 
 	@Override
-	public PackageMode getErrPackageMode(String errModeName) {
+	public PackageMode getErrPackageMode() {
 		return Modes.getPackageMode("json");
 	}
 
