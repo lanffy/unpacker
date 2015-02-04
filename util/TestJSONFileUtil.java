@@ -10,7 +10,7 @@ import com.wk.test.TestCase;
  */
 public class TestJSONFileUtil extends TestCase {
 	public void test_load_json() {
-		ServiceData data = JSONFileUtil.loadJsonFileToServiceData("/unpackerConf/mode/packageMode/outsys_mode");
+		ServiceData data = JSONFileUtil.loadJsonFileToServiceData("/unpackerConf/mode/packageMode/outsys_mode.json");
 		System.out.println(data);
 	}
 }

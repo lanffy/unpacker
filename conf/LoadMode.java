@@ -1,6 +1,7 @@
-package unpacker.mode;
+package unpacker.conf;
 
 import java.io.File;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +31,21 @@ import com.wk.util.FileUtil;
  */
 public class LoadMode {
 	private static final Log logger = LogFactory.getLog("unpacker");
-	private static SystemConfig config = SystemConfig.getInstance();
-	private static String fieldModePath = config.getString("unpacker.fieldModePath", "/unpacker/mode/fieldMode");
-	private static String packageModePath = config.getString("unpacker.packageModePath", "/unpacker/mode/packageMode");
-	private static String fieldProcessModePath = config.getString("unpacker.fieldProcessModePath", "/unpacker/mode/fieldProcessMode");
-	private static String fieldProcessEndModePath = config.getString("unpacker.fieldProcessEndModePath", "/unpacker/mode/fieldProcessEndMode");
+	
+	private static final String modeBasePath = "/unpackerConf/mode/";
+	
+	private static final SystemConfig config = SystemConfig.getInstance();
+	
+	private static final String fieldModePath = config.getProperty("unpacker.fieldModePath", modeBasePath + "fieldMode");
+	private static final String packageModePath = config.getProperty("unpacker.packageModePath", modeBasePath + "packageMode");
+	private static final String fieldProcessModePath = config.getProperty("unpacker.fieldProcessModePath", modeBasePath + "fieldProcessMode");
+	private static final String fieldEndProcessModePath = config.getProperty("unpacker.fieldEndProcessModePath", modeBasePath + "fieldEndProcessMode");
+	
+	public static void main(String[] args) {
+		loadMode();
+		DefaultPackageMode mode = (DefaultPackageMode) Modes.getPackageMode("outsys_mode");
+		System.out.println(mode.getName());
+	}
 	
 	public static void loadMode() {
 		loadFieldMode();
@@ -44,7 +55,10 @@ public class LoadMode {
 	}
 	
 	private static void loadFieldMode() {
-		List<File> fileList = FileUtil.listAllFiles(new File(fieldModePath));
+		URL url = getFileUrl(fieldModePath);
+		if(url == null)
+			return;
+		List<File> fileList = FileUtil.listAllFiles(new File(url.getFile()));
 		for(File file : fileList) {
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
 			FieldMode mode = (FieldMode)getMode(data, file.getAbsolutePath());
@@ -54,7 +68,10 @@ public class LoadMode {
 	}
 	
 	private static void loadPackageMode() {
-		List<File> fileList = FileUtil.listAllFiles(new File(packageModePath));
+		URL url = getFileUrl(packageModePath);
+		if(url == null)
+			return;
+		List<File> fileList = FileUtil.listAllFiles(new File(url.getFile()));
 		for(File file : fileList) {
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
 			PackageMode mode = (PackageMode)getMode(data, file.getAbsolutePath());
@@ -64,7 +81,10 @@ public class LoadMode {
 	}
 	
 	private static void loadFieldProcessMode() {
-		List<File> fileList = FileUtil.listAllFiles(new File(fieldProcessModePath));
+		URL url = getFileUrl(fieldProcessModePath);
+		if(url == null)
+			return;
+		List<File> fileList = FileUtil.listAllFiles(new File(url.getFile()));
 		for(File file : fileList) {
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
 			FieldProcessMode mode = (FieldProcessMode)getMode(data, file.getAbsolutePath());
@@ -74,7 +94,10 @@ public class LoadMode {
 	}
 	
 	private static void loadFieldEndProcessMode() {
-		List<File> fileList = FileUtil.listAllFiles(new File(fieldProcessEndModePath));
+		URL url = getFileUrl(fieldEndProcessModePath);
+		if(url == null)
+			return;
+		List<File> fileList = FileUtil.listAllFiles(new File(url.getFile()));
 		for(File file : fileList) {
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
 			FieldEndProcessMode mode = (FieldEndProcessMode)getMode(data, file.getAbsolutePath());
@@ -109,7 +132,7 @@ public class LoadMode {
 					} else {
 						ftype = FieldType.getFieldType(mode_type);
 					}
-					logger.info("MODE_CODE:{}, FIELD_MODE: {} = {}",mode_code, ftype, param_data.getString("PARAM_VALUE"));
+					logger.info("load MODE_PARAM:{}, FIELD_MODE: {} = {}",mode_code, ftype, param_data.getString("PARAM_VALUE"));
 					map.put(ftype, Modes.getFieldMode(param_data.getString("PARAM_VALUE")));
 				}
 				mode = ClassUtil.newInstance(cls, cls.getConstructor(String.class, Map.class), 
@@ -132,4 +155,12 @@ public class LoadMode {
 		return mode;
 	}
 	
+	private static URL getFileUrl(String filePath) {
+		URL url = LoadMode.class.getResource(filePath);
+		if(url == null) {
+			logger.warn("文件夹不存在：{}", filePath);
+			return null;
+		}
+		return url;
+	}
 }

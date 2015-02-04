@@ -4,21 +4,50 @@ import com.wk.conv.PacketChannelBuffer;
 import com.wk.conv.config.StructConfig;
 import com.wk.conv.mode.PackageMode;
 import com.wk.conv.mode.VRouterPackageMode;
-import com.wk.nio.ChannelBuffer;
 import com.wk.sdo.ServiceData;
 
 /**
- * @description
+ * @description VRouter报文拆组包
  * @author raoliang
  * @version 2015年2月2日 下午7:33:55
  */
-public class DefaultMsg {
-	
-	public static ServiceData unpack(ChannelBuffer buffer) {
+public class DefaultMsg extends Msg{
+
+	public ServiceData unpackRequest(PacketChannelBuffer buffer) {
 		ServiceData data = new ServiceData();
-		PackageMode mode = new VRouterPackageMode();
-		StructConfig response = new StructConfig(mode, false);
-		data = mode.unpack(new PacketChannelBuffer(buffer), response, data, buffer.readableBytes());
+		StructConfig request = new StructConfig(requestMode, false);
+		data = requestMode.unpack(buffer, request, data, buffer.readableBytes());
 		return data;
+	}
+
+	@Override
+	public ServiceData unpackResponse(PacketChannelBuffer buffer) {
+		ServiceData data = new ServiceData();
+		StructConfig response = new StructConfig(responseMode, false);
+		data = responseMode.unpack(buffer, response, data, buffer.readableBytes());
+		return data;
+	}
+
+	@Override
+	public ServiceData unpackError(PacketChannelBuffer buffer) {
+		ServiceData data = new ServiceData();
+		StructConfig error = new StructConfig(errorMode, false);
+		data = errorMode.unpack(buffer, error, data, buffer.readableBytes());
+		return data;
+	}
+
+	@Override
+	public PackageMode getReqPackageMode(String reqModeName) {
+		return new VRouterPackageMode();
+	}
+
+	@Override
+	public PackageMode getRespPackageMode(String respModeName) {
+		return new VRouterPackageMode();
+	}
+
+	@Override
+	public PackageMode getErrPackageMode(String errModeName) {
+		return new VRouterPackageMode();
 	}
 }

@@ -1,9 +1,11 @@
 package unpacker.test;
 
 import unpacker.msg.InbankMsg;
+import unpacker.msg.Msg;
 import unpacker.msg.SimulateMsg;
 import unpacker.util.BufferReader;
 
+import com.wk.conv.PacketChannelBuffer;
 import com.wk.nio.ChannelBuffer;
 import com.wk.sdo.ServiceData;
 import com.wk.test.TestCase;
@@ -15,19 +17,23 @@ import com.wk.test.TestCase;
  */
 public class TestInbankMsg extends TestCase{
 	
-	public void atest_unpack_inbankmsg() {
+	public void test_unpack_inbankmsg() {
 		ChannelBuffer buffer = BufferReader.createRequestMsg("8808resp2");
-		ServiceData data = InbankMsg.unpack(buffer);
+		Msg inbankMsg = new InbankMsg();
+		inbankMsg.respModeName = "outsys_mode";
+		ServiceData data = inbankMsg.unpackResponse(new PacketChannelBuffer(buffer));
 		assertEquals("AAAAAAA", data.getString("O1MGID"));
 	}
 	
 	public void atest_unpack_inbankmsg_havearray() {
 		ChannelBuffer buffer = BufferReader.createRequestMsg("8813resp");
-		ServiceData data = InbankMsg.unpack(buffer);
+		Msg inbankMsg = new InbankMsg();
+		inbankMsg.respModeName = "outsys_mode";
+		ServiceData data = inbankMsg.unpackResponse(new PacketChannelBuffer(buffer));
 		assertEquals("AAAAAAA", data.getString("O1MGID"));
 	}
 	
-	public void test_send_and_unpack() {
+	public void atest_send_and_unpack() {
 		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("8813resp");
 		ChannelBuffer buffer = SimulateMsg.packHeadBuffer(sendedBuffer);
 		System.out.println(buffer.toHexString());

@@ -1,8 +1,10 @@
 package unpacker;
 
 import unpacker.msg.DefaultMsg;
+import unpacker.msg.Msg;
 
 import com.wk.actor.Actor;
+import com.wk.lang.Inject;
 import com.wk.logging.Log;
 import com.wk.logging.LogFactory;
 import com.wk.net.ChannelBufferMsg;
@@ -19,7 +21,7 @@ import com.wk.sdo.ServiceData;
  */
 public class MessageReceiver {
 	
-	private Log logger = LogFactory.getLog("Resolve");
+	protected static final Log logger = LogFactory.getLog("unpacker");
 	
 	public static void main(String[] args) throws Exception {
 		new MessageReceiver();
@@ -47,13 +49,14 @@ class ReqActor<T extends ChannelBufferMsg> extends Actor<Request<T>> {
 		ChannelBuffer buffer = request.getRequestMsg().toChannelBuffer();
 		int len = buffer.getInt();
 		System.out.printf("before unpack,buffer length:{%d},buffer:{\n%s\n}",len, buffer.toHexString());
-		logger.info("收到报文,报文长度:[{}],报文:{}", len, buffer.toHexString());
+		MessageReceiver.logger.info("收到报文,报文长度:[{}],报文:{}", len, buffer.toHexString());
 		ServiceData data = new ServiceData();
 //		data = VrouterMsg.unpack(buffer);
 //		data = InbankMsg.unpack(buffer);
-		data = DefaultMsg.unpack(buffer);
+		Msg unpack = new DefaultMsg();
+//		data = unpack.unpack(buffer);
 		System.out.println(data);
-		logger.info("第一次拆包:{}", data);
+		MessageReceiver.logger.info("第一次拆包:{}", data);
 		request.doResponse((T)new ChannelBufferMsg(buffer));
 	}
 }

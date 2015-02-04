@@ -29,14 +29,14 @@ public class InbankTranConfig {
 		response.putChild(new FieldConfig("O1DATE", FieldType.FIELD_DOUBLE, 8));
 	}
 	
-	public static void tran8813Config(StructConfig request, StructConfig response, StructConfig error, PackageMode mode) {
+	public static void tran8813RespConfig(StructConfig response, PackageMode respMode) {
 		response.putChild(new FieldConfig("O1ACUR", FieldType.FIELD_DOUBLE, 2));
 		response.putChild(new FieldConfig("O1TRDT", FieldType.FIELD_DOUBLE, 8));
 		response.putChild(new FieldConfig("O1TRTM", FieldType.FIELD_DOUBLE, 6));
 		response.putChild(new FieldConfig("O1TLSQ", FieldType.FIELD_STRING, 10));
 		
 		//1:结构中字段拆包模式，2.结构中字段拆包是否严格
-		StructConfig struct = new StructConfig(mode, true);
+		StructConfig struct = new StructConfig(respMode, true);
 		struct.putChild(new FieldConfig("O2NBBH", FieldType.FIELD_STRING, 8));
 		struct.putChild(new FieldConfig("O2FEDT", FieldType.FIELD_DOUBLE, 8));
 		struct.putChild(new FieldConfig("O2RBSQ", FieldType.FIELD_STRING, 12));
@@ -66,5 +66,13 @@ public class InbankTranConfig {
 		//1. 数组名称，2. 数组大小表达式， 3. 域条件表达式， 4. 数组中元素， 5. 未知！6. 是否必须
 		response.putChild(new ArrayConfig("FACTLYO1", "Double.valueOf(data.getDouble(\"O1ACUR\")).intValue();",
 				null, struct, null, false));
+	}
+	
+	public static void tran8813ReqConfig(StructConfig request, PackageMode reqMode) {
+		
+	}
+	
+	public static void tran8813ErrConfig(StructConfig err, PackageMode errMode) {
+		
 	}
 }

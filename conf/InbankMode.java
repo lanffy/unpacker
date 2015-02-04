@@ -1,4 +1,4 @@
-package unpacker.mode;
+package unpacker.conf;
 
 import java.util.HashMap;
 import java.util.Map;
