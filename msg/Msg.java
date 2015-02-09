@@ -1,6 +1,6 @@
 package unpacker.msg;
 
-import unpacker.conf.LoadMode;
+import unpacker.conf.ModeLoader;
 
 import com.wk.conv.PacketChannelBuffer;
 import com.wk.conv.mode.PackageMode;
@@ -15,7 +15,7 @@ import com.wk.sdo.ServiceData;
  */
 public abstract class Msg {
 	static {
-		LoadMode.loadMode();
+		ModeLoader.loadMode();
 	}
 	protected final Log logger = LogFactory.getLog("unpacker");
 	public static String reqModeName;

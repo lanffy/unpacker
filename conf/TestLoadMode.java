@@ -11,7 +11,7 @@ import com.wk.test.TestCase;
  */
 public class TestLoadMode extends TestCase{
 	public void test_load_mode() {
-		LoadMode.loadMode();
+		ModeLoader.loadMode();
 		DefaultPackageMode mode = (DefaultPackageMode) Modes.getPackageMode("outsys_mode");
 		System.out.println(mode);
 	}

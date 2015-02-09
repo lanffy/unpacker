@@ -20,8 +20,10 @@ public class Loader {
 	
 	public static final SystemConfig config = SystemConfig.getInstance();
 	
+	protected static final String basePath = "/unpackerConf/";
+	
 	public static List<File> getFileList(String filePath) {
-		URL url = LoadMode.class.getResource(filePath);
+		URL url = ModeLoader.class.getResource(filePath);
 		if(url == null) {
 			logger.warn("文件夹不存在：{}", filePath);
 			return null;

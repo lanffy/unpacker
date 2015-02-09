@@ -24,9 +24,9 @@ import com.wk.util.ClassUtil;
  * @author raoliang
  * @version 2015年2月3日 下午1:51:47
  */
-public class LoadMode extends Loader{
+public class ModeLoader extends Loader{
 	
-	private static final String modeBasePath = "/unpackerConf/mode/";
+	private static final String modeBasePath = basePath + "mode/";
 	
 	private static final String fieldModePath = config.getProperty("unpacker.fieldModePath", modeBasePath + "fieldMode");
 	private static final String packageModePath = config.getProperty("unpacker.packageModePath", modeBasePath + "packageMode");
