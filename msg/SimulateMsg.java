@@ -23,7 +23,7 @@ public class SimulateMsg {
 	private static String dst_ip = "10.1.1.227";
 	// dst_port 接收系统连接端口 整型
 	private static int dst_prot = 9101;
-	// packet_type 报文类型（请求、响应） 整型
+	// packet_type 报文类型（1-请求，2-响应） 整型
 	private static int packet_type = 2;
 	// mactch_id 报文匹配ID 短字符串
 	private static String mactch_id = "0808";

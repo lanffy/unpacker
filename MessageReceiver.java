@@ -1,10 +1,9 @@
 package unpacker;
 
 import unpacker.msg.DefaultMsg;
-import unpacker.msg.Msg;
 
 import com.wk.actor.Actor;
-import com.wk.lang.Inject;
+import com.wk.conv.PacketChannelBuffer;
 import com.wk.logging.Log;
 import com.wk.logging.LogFactory;
 import com.wk.net.ChannelBufferMsg;
@@ -50,13 +49,11 @@ class ReqActor<T extends ChannelBufferMsg> extends Actor<Request<T>> {
 		int len = buffer.getInt();
 		System.out.printf("before unpack,buffer length:{%d},buffer:{\n%s\n}",len, buffer.toHexString());
 		MessageReceiver.logger.info("收到报文,报文长度:[{}],报文:{}", len, buffer.toHexString());
-		ServiceData data = new ServiceData();
-//		data = VrouterMsg.unpack(buffer);
-//		data = InbankMsg.unpack(buffer);
-		Msg unpack = new DefaultMsg();
-//		data = unpack.unpack(buffer);
-		System.out.println(data);
+		ServiceData data  = DefaultMsg.unpack(new PacketChannelBuffer(buffer));
 		MessageReceiver.logger.info("第一次拆包:{}", data);
+		System.out.println(data);
 		request.doResponse((T)new ChannelBufferMsg(buffer));
 	}
+	
+	
 }

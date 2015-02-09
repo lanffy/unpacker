@@ -34,10 +34,7 @@ import com.wk.util.StringUtil;
 public class ConfigLoader extends Loader{
 	
 	private static final String baseServerPath = basePath + "server/";
-	private static final String baseTranConfPath = basePath + "tranServer/";
-	
-	private static final HashMap<String, PackageConfig> headConfigs = new HashMap<String, PackageConfig>();
-	private static final HashMap<String, PackageConfig> bodyConfigs = new HashMap<String, PackageConfig>();
+	private static final String baseTranConfPath = basePath + "tranConf/";
 	
 	private static final String serverPath = config.getProperty("unpacker.serverPath", baseServerPath);
 	private static final String tranConfPath = config.getProperty("unpacker.tranConfPath", baseTranConfPath);
@@ -52,8 +49,8 @@ public class ConfigLoader extends Loader{
 			StructConfig resp_conf = json2IOConfig(serverInfo.getResp_Package_Conf());
 			StructConfig err_conf = json2IOConfig(serverInfo.getErr_Package_Conf());
 			final PackageConfig head_config = new PackageConfig(req_conf, resp_conf, err_conf); 
-			headConfigs.put(serverCode, head_config);
-			logger.info("加载报文头配置：[ {} ].", serverCode);
+			Configs.putHeadConfig(serverCode, head_config);
+			logger.info("加载服务系统报文头配置：[ {} ].", serverCode);
 		}
 	}
 	
@@ -67,8 +64,8 @@ public class ConfigLoader extends Loader{
 			StructConfig req_conf = json2IOConfig(tranInfo.getReq_Conf());
 			StructConfig resp_conf = json2IOConfig(tranInfo.getResp_Conf());
 			final PackageConfig body_config = new PackageConfig(req_conf, resp_conf);
-			bodyConfigs.put(serverCode + "_" + tranCode, body_config);
-			logger.info("加载报文体配置，服务系统：[ {} ],交易码：[ {} ].", serverCode, tranCode);
+			Configs.putBodyConfig(serverCode, tranCode, body_config);
+			logger.info("加载交易报文体配置，服务系统：[ {} ],交易码：[ {} ].", serverCode, tranCode);
 		}
 	}
 	

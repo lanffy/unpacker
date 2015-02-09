@@ -13,6 +13,6 @@ public class TestLoadMode extends TestCase{
 	public void test_load_mode() {
 		ModeLoader.loadMode();
 		DefaultPackageMode mode = (DefaultPackageMode) Modes.getPackageMode("outsys_mode");
-		System.out.println(mode);
+		assertEquals("outsys_mode", mode.getName());
 	}
 }
