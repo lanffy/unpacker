@@ -13,7 +13,7 @@ import com.wk.nio.ChannelBuffer;
  * @version 2015年2月2日 下午2:12:40
  */
 public class SimulateMsg {
-	private static ChannelBuffer buffer = ChannelBuffer.allocate(1024);
+	private static ChannelBuffer buffer = ChannelBuffer.allocate(10240);
 	// agent_id 采集端ID 短字符串
 	private static String agent_id = "agent_id_value";
 	// msg_id 采集端消息ID 整型
@@ -27,7 +27,7 @@ public class SimulateMsg {
 	// dst_port 接收系统连接端口 整型
 	private static int dst_prot = 8881;
 	// packet_type 报文类型（1-请求，2-响应） 整型
-	private static int packet_type = 1;
+	private static int packet_type = 2;
 	// match_id 报文匹配ID 短字符串
 	private static String match_id = "0808";
 	// send_time 发送时间 短字符串
@@ -100,6 +100,7 @@ public class SimulateMsg {
 	
 	public static void main(String[] args) {
 		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("8813resp");
+//		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("8813req");
 		ChannelBuffer buffer = packRequestBuffer(sendedBuffer);
 		System.out.println(buffer.toHexString());
 		System.out.println(buffer.readableBytes());

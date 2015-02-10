@@ -49,7 +49,10 @@ public class Resolver {
 			String unpackedServer = MsgContainer.getUnpackedConf(info.getMatch_id());
 			//如果已经解析过相同match_id的请求报文
 			if(unpackedServer != null) {
+				logger.info("收到有对应请求报文的响应报文,根据请求报文拆包");
 				unpackResponseMsg(info, server);
+			}else {
+				logger.info("收到无对应请求报文的响应报文,暂时保存,不拆包.");
 			}
 		}else {
 			logger.warn("报文类型:[{}]不存在!", typeFlag);
@@ -58,6 +61,8 @@ public class Resolver {
 			logger.info("组异常返回报文");
 			return packResponseBuffer();
 		}
+		ret_code = "0";
+		ret_msg = "拆包成功";
 		logger.info("组响应报文");
 		return packResponseBuffer();
 	}
@@ -82,7 +87,10 @@ public class Resolver {
 		//根据match_id判断之前是否收到响应报文，如果收到则解析
 		PacketsInfo respInfo = MsgContainer.getResponseMsg(info.getMatch_id());
 		if(respInfo != null) {
+			logger.info("拆请求报文对应的响应报文");
 			unpackResponseMsg(respInfo, server);
+		} else {
+			logger.info("暂未收到请求报文对应的响应报文");
 		}
 	}
 	
@@ -95,9 +103,9 @@ public class Resolver {
 		PacketChannelBuffer buffer = new PacketChannelBuffer(info.getPacket());
 		
 		respHeadConfig.getPackageMode().unpack(buffer, respHeadConfig, data, buffer.readableBytes());
-		logger.info("拆请求头后,报文:[\n{}\n]", data);
+		logger.info("拆响应头后,报文:[\n{}\n]", data);
 		respBodyConfig.getPackageMode().unpack(buffer, respBodyConfig, data, buffer.readableBytes());
-		logger.info("拆请求体后,报文:[\n{}\n]", data);
+		logger.info("拆响应体后,报文:[\n{}\n]", data);
 		//TODO: 此处调用转发data的方法
 		
 		MsgContainer.removeResponseMsg(info.getMatch_id());
