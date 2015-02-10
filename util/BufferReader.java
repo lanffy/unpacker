@@ -1,9 +1,9 @@
-package unpacker.util;
+package resolver.util;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import unpacker.Receiver;
+import resolver.Receiver;
 
 import com.wk.net.ChannelBufferMsg;
 import com.wk.nio.ChannelBuffer;

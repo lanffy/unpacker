@@ -1,11 +1,10 @@
-package unpacker.conf;
+package resolver.conf;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import unpacker.util.JSONFileUtil;
+import resolver.util.JSONFileUtil;
 
 import com.wk.conv.config.ArrayConfig;
 import com.wk.conv.config.ConvConfig;
@@ -36,10 +35,15 @@ public class ConfigLoader extends Loader{
 	private static final String baseServerPath = basePath + "server/";
 	private static final String baseTranConfPath = basePath + "tranConf/";
 	
-	private static final String serverPath = config.getProperty("unpacker.serverPath", baseServerPath);
-	private static final String tranConfPath = config.getProperty("unpacker.tranConfPath", baseTranConfPath);
+	private static final String serverPath = config.getProperty("resolver.serverPath", baseServerPath);
+	private static final String tranConfPath = config.getProperty("resolver.tranConfPath", baseTranConfPath);
 	
-	public static void loadServer() {
+	public static void loadConf() {
+		loadServer();
+		loadTranConf();
+	}
+	
+	private static void loadServer() {
 		List<File> fileList = getFileList(serverPath);
 		for(File file : fileList) {
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
@@ -54,7 +58,7 @@ public class ConfigLoader extends Loader{
 		}
 	}
 	
-	public static void loadTranConf() {
+	private static void loadTranConf() {
 		List<File> fileList = getFileList(tranConfPath);
 		for(File file : fileList) {
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);

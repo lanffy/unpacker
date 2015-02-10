@@ -1,4 +1,4 @@
-package unpacker.msg;
+package resolver.msg;
 
 import com.wk.conv.PacketChannelBuffer;
 import com.wk.conv.config.StructConfig;

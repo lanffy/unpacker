@@ -1,4 +1,4 @@
-package unpacker.msg;
+package resolver.msg;
 
 import com.wk.sdo.ServiceData;
 
@@ -75,6 +75,7 @@ public class PacketsInfo {
 		return data.getImage("packet");
 	}
 
+	/**
 	// agent_id 采集端ID 短字符串
 	private String agent_id;
 	// msg_id 采集端消息ID 整型
@@ -99,5 +100,5 @@ public class PacketsInfo {
 	private String ack_time;
 	// packet 应用报文 长字节流
 	private byte[] packet;
-
+	*/
 }

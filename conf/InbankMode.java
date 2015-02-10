@@ -1,4 +1,4 @@
-package unpacker.conf;
+package resolver.conf;
 
 import java.util.HashMap;
 import java.util.Map;

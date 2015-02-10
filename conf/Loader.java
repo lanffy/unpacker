@@ -1,4 +1,4 @@
-package unpacker.conf;
+package resolver.conf;
 
 import java.io.File;
 import java.net.URL;
@@ -16,11 +16,11 @@ import com.wk.util.FileUtil;
  */
 public class Loader {
 	
-	public static final Log logger = LogFactory.getLog("unpacker");
+	public static final Log logger = LogFactory.getLog("resolver");
 	
 	public static final SystemConfig config = SystemConfig.getInstance();
 	
-	protected static final String basePath = "/unpackerConf/";
+	protected static final String basePath = "/resolverConf/";
 	
 	protected static List<File> getFileList(String filePath) {
 		URL url = ModeLoader.class.getResource(filePath);

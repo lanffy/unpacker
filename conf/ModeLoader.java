@@ -1,11 +1,11 @@
-package unpacker.conf;
+package resolver.conf;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import unpacker.util.JSONFileUtil;
+import resolver.util.JSONFileUtil;
 
 import com.wk.conv.mode.DefaultPackageMode;
 import com.wk.conv.mode.FieldEndProcessMode;
@@ -28,10 +28,10 @@ public class ModeLoader extends Loader{
 	
 	private static final String modeBasePath = basePath + "mode/";
 	
-	private static final String fieldModePath = config.getProperty("unpacker.fieldModePath", modeBasePath + "fieldMode");
-	private static final String packageModePath = config.getProperty("unpacker.packageModePath", modeBasePath + "packageMode");
-	private static final String fieldProcessModePath = config.getProperty("unpacker.fieldProcessModePath", modeBasePath + "fieldProcessMode");
-	private static final String fieldEndProcessModePath = config.getProperty("unpacker.fieldEndProcessModePath", modeBasePath + "fieldEndProcessMode");
+	private static final String fieldModePath = config.getProperty("resolver.fieldModePath", modeBasePath + "fieldMode");
+	private static final String packageModePath = config.getProperty("resolver.packageModePath", modeBasePath + "packageMode");
+	private static final String fieldProcessModePath = config.getProperty("resolver.fieldProcessModePath", modeBasePath + "fieldProcessMode");
+	private static final String fieldEndProcessModePath = config.getProperty("resolver.fieldEndProcessModePath", modeBasePath + "fieldEndProcessMode");
 	
 	public static void main(String[] args) {
 		loadMode();

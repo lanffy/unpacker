@@ -1,4 +1,4 @@
-package unpacker.util;
+package resolver.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,7 +12,6 @@ import com.wk.logging.LogFactory;
 import com.wk.sdo.ServiceData;
 import com.wk.util.JSON;
 import com.wk.util.JSONCaseType;
-import compare.DBCompare;
 
 /**
  * @description 
@@ -24,7 +23,7 @@ import compare.DBCompare;
  * @version 2014年11月5日 上午11:18:30
  */
 public class JSONFileUtil {
-	private static final Log logger = LogFactory.getLog("unpacker");
+	private static final Log logger = LogFactory.getLog("resolver");
 	
 	/**
 	* @description 读取json格式文件内容，转换成ServiceData格式
@@ -54,7 +53,7 @@ public class JSONFileUtil {
 		try {
 			json = readFileToString(file);
 		} catch (IOException e) {
-			throw new SystemException("SYS_UNPACKER_READ_JSON_FILE_ERROR")
+			throw new SystemException("SYS_RESOLVER_READ_JSON_FILE_ERROR")
 				.addScene("filePath", file.getAbsolutePath());
 		}
 		if(json.length() == 0){
@@ -65,7 +64,7 @@ public class JSONFileUtil {
 //		try {
 			data = JSON.toServiceDataByType(json, JSONCaseType.DEFAULT);
 //		} catch (Exception e) {
-//			throw new SystemException("SYS_UNPACKER_CONVERT_JSON_TO_SERVICEDATA_ERROR").addScene("json_file", file.getAbsolutePath());
+//			throw new SystemException("SYS_RESOLVER_CONVERT_JSON_TO_SERVICEDATA_ERROR").addScene("json_file", file.getAbsolutePath());
 //		}
 		return data;
     }

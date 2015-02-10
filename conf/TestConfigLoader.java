@@ -1,4 +1,4 @@
-package unpacker.conf;
+package resolver.conf;
 
 import com.wk.test.TestCase;
 
@@ -12,8 +12,7 @@ public class TestConfigLoader extends TestCase {
 	@Override
 	protected void setUpOnce() throws java.lang.Exception {
 		ModeLoader.loadMode();
-		ConfigLoader.loadServer();
-		ConfigLoader.loadTranConf();
+		ConfigLoader.loadConf();
 		System.out.println("loader done");
 	}
 

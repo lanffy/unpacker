@@ -1,4 +1,4 @@
-package unpacker.conf;
+package resolver.conf;
 
 import com.wk.sdo.ServiceData;
 

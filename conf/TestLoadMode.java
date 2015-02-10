@@ -1,4 +1,4 @@
-package unpacker.conf;
+package resolver.conf;
 
 import com.wk.conv.mode.DefaultPackageMode;
 import com.wk.conv.mode.Modes;

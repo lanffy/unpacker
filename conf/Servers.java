@@ -1,4 +1,4 @@
-package unpacker.conf;
+package resolver.conf;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,7 +22,7 @@ public class Servers extends Loader{
 	
 	public static void main(String[] args) {
 		loadServer();
-		System.out.println(getServerByIp("127.0.0.1.8080"));
+		System.out.println(getServerByIp("127.0.0.1:8080"));
 	}
 	
 	public static void loadServer() {

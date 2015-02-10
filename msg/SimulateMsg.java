@@ -1,9 +1,9 @@
-package unpacker.msg;
+package resolver.msg;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import unpacker.util.BufferReader;
+import resolver.util.BufferReader;
 
 import com.wk.nio.ChannelBuffer;
 
@@ -17,17 +17,17 @@ public class SimulateMsg {
 	// agent_id 采集端ID 短字符串
 	private static String agent_id = "agent_id_value";
 	// msg_id 采集端消息ID 整型
-	private static int msg_id = 1;
+	private static int msg_id = 8813;
 	// src_ip 发起系统IP 短字符串
 	private static String src_ip = "127.0.0.1";
 	// src_port 发起系统连接端口 整型
 	private static int src_port = 8083;
 	// dst_ip 接收系统IP 短字符串
-	private static String dst_ip = "10.1.1.227";
+	private static String dst_ip = "127.0.0.1";
 	// dst_port 接收系统连接端口 整型
-	private static int dst_prot = 9101;
+	private static int dst_prot = 8881;
 	// packet_type 报文类型（1-请求，2-响应） 整型
-	private static int packet_type = 2;
+	private static int packet_type = 1;
 	// match_id 报文匹配ID 短字符串
 	private static String match_id = "0808";
 	// send_time 发送时间 短字符串
@@ -57,10 +57,6 @@ public class SimulateMsg {
 		putBytesAttr("packet", packet);
 		buffer.putInt(0, buffer.readableBytes());
 		return buffer;
-	}
-	
-	public static ChannelBuffer packResponseBuffer() {
-		
 	}
 	
 	public static void putStringAttr(String attr_name, String attr_value) {

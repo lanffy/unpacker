@@ -1,4 +1,4 @@
-package unpacker.msg;
+package resolver.msg;
 
 import java.util.HashMap;
 
