@@ -50,9 +50,9 @@ public class PacketsInfo {
 		return data.getInt("packet_type");
 	}
 	
-	// mactch_id 报文匹配ID 短字符串
-	public String getMactch_id() {
-		return data.getString("mactch_id");
+	// match_id 报文匹配ID 短字符串
+	public String getMatch_id() {
+		return data.getString("match_id");
 	}
 	
 	// send_time 发送时间 短字符串
@@ -89,8 +89,8 @@ public class PacketsInfo {
 	private int dst_prot;
 	// packet_type 报文类型（请求、响应） 整型
 	private int packet_type;
-	// mactch_id 报文匹配ID 短字符串
-	private String mactch_id;
+	// match_id 报文匹配ID 短字符串
+	private String match_id;
 	// send_time 发送时间 短字符串
 	private String send_time;
 	// has_ack 是否收到对方ACK 整型

@@ -1,5 +1,8 @@
 package unpacker.msg;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import unpacker.util.BufferReader;
 
 import com.wk.nio.ChannelBuffer;
@@ -25,18 +28,18 @@ public class SimulateMsg {
 	private static int dst_prot = 9101;
 	// packet_type 报文类型（1-请求，2-响应） 整型
 	private static int packet_type = 2;
-	// mactch_id 报文匹配ID 短字符串
-	private static String mactch_id = "0808";
+	// match_id 报文匹配ID 短字符串
+	private static String match_id = "0808";
 	// send_time 发送时间 短字符串
-	private static String send_time = "2015-02-02 15:39:44.000";
+	private static String send_time = getTime();
 	// has_ack 是否收到对方ACK 整型
 	private static int has_ack = 1;
 	// ack_time 收到ACK的时间 短字符串
-	private static String ack_time = "2015-02-02 15:40:22.123";
+	private static String ack_time = getTime();
 	// packet 应用报文 长字节流
 	private static byte[] packet;
 	
-	public static ChannelBuffer packHeadBuffer(ChannelBuffer sendedBuffer) {
+	public static ChannelBuffer packRequestBuffer(ChannelBuffer sendedBuffer) {
 		buffer.putInt(0);
 		putStringAttr("agent_id", agent_id);
 		putIntAttr("msg_id", msg_id);
@@ -45,7 +48,7 @@ public class SimulateMsg {
 		putStringAttr("dst_ip", dst_ip);
 		putIntAttr("dst_prot", dst_prot);
 		putIntAttr("packet_type", packet_type);
-		putStringAttr("mactch_id", mactch_id);
+		putStringAttr("match_id", match_id);
 		putStringAttr("send_time", send_time);
 		putIntAttr("has_ack", has_ack);
 		putStringAttr("ack_time", ack_time);
@@ -54,6 +57,10 @@ public class SimulateMsg {
 		putBytesAttr("packet", packet);
 		buffer.putInt(0, buffer.readableBytes());
 		return buffer;
+	}
+	
+	public static ChannelBuffer packResponseBuffer() {
+		
 	}
 	
 	public static void putStringAttr(String attr_name, String attr_value) {
@@ -97,9 +104,15 @@ public class SimulateMsg {
 	
 	public static void main(String[] args) {
 		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("8813resp");
-		ChannelBuffer buffer = packHeadBuffer(sendedBuffer);
+		ChannelBuffer buffer = packRequestBuffer(sendedBuffer);
 		System.out.println(buffer.toHexString());
 		System.out.println(buffer.readableBytes());
 		System.out.println(buffer.capacity());
 	}
+	
+	public static String getTime() {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");//设置日期格式
+		return df.format(new Date());// new Date()为获取当前系统时间
+	}
+	
 }

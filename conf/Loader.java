@@ -22,7 +22,7 @@ public class Loader {
 	
 	protected static final String basePath = "/unpackerConf/";
 	
-	public static List<File> getFileList(String filePath) {
+	protected static List<File> getFileList(String filePath) {
 		URL url = ModeLoader.class.getResource(filePath);
 		if(url == null) {
 			logger.warn("文件夹不存在：{}", filePath);

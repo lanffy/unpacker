@@ -26,7 +26,7 @@ public class TestInbankMsg extends TestCase{
 	
 	public void atest_send_and_unpack() {
 		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("8813resp");
-		ChannelBuffer buffer = SimulateMsg.packHeadBuffer(sendedBuffer);
+		ChannelBuffer buffer = SimulateMsg.packRequestBuffer(sendedBuffer);
 		System.out.println(buffer.toHexString());
 	}
 	
