@@ -26,12 +26,9 @@ import com.wk.util.ClassUtil;
  */
 public class ModeLoader extends Loader{
 	
-	private static final String modeBasePath = basePath + "mode/";
+	private static final String modeBasePath = basePath + "Mode/";
 	
-	private static final String fieldModePath = config.getProperty("resolver.fieldModePath", modeBasePath + "fieldMode");
-	private static final String packageModePath = config.getProperty("resolver.packageModePath", modeBasePath + "packageMode");
-	private static final String fieldProcessModePath = config.getProperty("resolver.fieldProcessModePath", modeBasePath + "fieldProcessMode");
-	private static final String fieldEndProcessModePath = config.getProperty("resolver.fieldEndProcessModePath", modeBasePath + "fieldEndProcessMode");
+	private static final String modeFilePath = config.getProperty("resolver.modeFilePath", modeBasePath);
 	
 	public static void main(String[] args) {
 		loadMode();
@@ -40,60 +37,21 @@ public class ModeLoader extends Loader{
 	}
 	
 	public static void loadMode() {
-		loadFieldMode();
-		loadPackageMode();
-		loadFieldProcessMode();
-		loadFieldEndProcessMode();
-	}
-	
-	private static void loadFieldMode() {
-		List<File> fileList = getFileList(fieldModePath);
+		List<File> fileList = getFileList(modeFilePath);
 		for(File file : fileList) {
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
-			FieldMode mode = (FieldMode)getMode(data, file.getAbsolutePath());
-			Modes.putFieldMode(mode);
+			loadMode(data, file.getAbsolutePath());
 		}
-		logger.info("加载域模式:{}个", fileList.size());
 	}
 	
-	private static void loadPackageMode() {
-		List<File> fileList = getFileList(packageModePath);
-		for(File file : fileList) {
-			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
-			PackageMode mode = (PackageMode)getMode(data, file.getAbsolutePath());
-			Modes.putPackageMode(mode);
-		}
-		logger.info("加载包模式:{}个", fileList.size());
-	}
-	
-	private static void loadFieldProcessMode() {
-		List<File> fileList = getFileList(fieldProcessModePath);
-		for(File file : fileList) {
-			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
-			FieldProcessMode mode = (FieldProcessMode)getMode(data, file.getAbsolutePath());
-			Modes.putFieldProcessMode(mode);
-		}
-		logger.info("加载域处理模式:{}个", fileList.size());
-	}
-	
-	private static void loadFieldEndProcessMode() {
-		List<File> fileList = getFileList(fieldEndProcessModePath);
-		for(File file : fileList) {
-			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
-			FieldEndProcessMode mode = (FieldEndProcessMode)getMode(data, file.getAbsolutePath());
-			Modes.putFieldEndProcessMode(mode);
-		}
-		logger.info("加载域结束处理模式:{}个", fileList.size());
-	}
-	
-	private static Object getMode(ServiceData data, String modeFilePath) {
+	private static void loadMode(ServiceData data, String modeFilePath) {
 		if(data == null || data.size() == 0) {
 			logger.warn("加载模式时文件异常,文件内容为空.文件名:{}", modeFilePath);
-			return null;
+			return;
 		}
 		String mode_code = data.getString("MODE_CODE");
+		String mode_name = data.getString("MODE_NAME");
 		String mode_class = data.getString("MODE_CLASS");
-		logger.info("load MODE_CODE - {}; MODE_CALSS - {}", mode_code, mode_class);
 		Object mode = null;
 		try {
 			//模式实现类
@@ -127,12 +85,29 @@ public class ModeLoader extends Loader{
 			}
 		} catch(Throwable t) {
 			t.printStackTrace();
-			throw new SystemException("SYS_UNPAKER_LOAD_MODE_CLASS_NOT_FOUND_OR_HAS_NO_STRING_CONSTRUCTOR")
+			throw new SystemException("SYS_RESOLVER_LOAD_MODE_CLASS_NOT_FOUND_OR_HAS_NO_STRING_CONSTRUCTOR")
 							.addScene("ModeName", mode_code)
 							.addScene("ModeClass", mode_class);
 		}
-		
-		return mode;
+		String type = data.getString("MODE_TYPE");
+		if(type == null)
+			throw new SystemException("SYS_RESOLVER_LOAD_MODE_NOT_HAVE_MODE_TYPE_PARAMETER");
+		if (type.equals("0")) {
+			Modes.putFieldMode((FieldMode)mode);
+			logger.info("加载域模式 MODE_CODE -> [{}], MODE_NAME -> [{}], MODE_CLASS -> [{}]", mode_code, mode_name, mode_class);
+		} else if (type.equals("1")) {
+			Modes.putPackageMode((PackageMode)mode);
+			logger.info("加载包模式 MODE_CODE -> [{}], MODE_NAME -> [{}], MODE_CLASS -> [{}]", mode_code, mode_name, mode_class);
+		} else if (type.equals("2")) {
+			Modes.putFieldProcessMode((FieldProcessMode)mode);
+			logger.info("加载域处理模式 MODE_CODE -> [{}], MODE_NAME -> [{}], MODE_CLASS -> [{}]", mode_code, mode_name, mode_class);
+		} else if (type.equals("3")) {
+			Modes.putFieldEndProcessMode((FieldEndProcessMode)mode);
+			logger.info("加载域结束处理模式 MODE_CODE -> [{}], MODE_NAME -> [{}], MODE_CLASS -> [{}]", mode_code, mode_name, mode_class);
+		} else {
+			logger.warn("不存在的模式类型 MODE_CODE -> [{}], MODE_NAME -> [{}]", mode_code, mode_name);
+			return;
+		}
 	}
 	
 }

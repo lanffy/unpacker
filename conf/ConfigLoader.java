@@ -32,11 +32,11 @@ import com.wk.util.StringUtil;
  */
 public class ConfigLoader extends Loader{
 	
-	private static final String baseServerPath = basePath + "server/";
-	private static final String baseTranConfPath = basePath + "tranConf/";
+	private static final String baseServerPath = basePath + "Server/";
+	private static final String baseTranConfPath = basePath + "ServerTranService/";
 	
 	private static final String serverPath = config.getProperty("resolver.serverPath", baseServerPath);
-	private static final String tranConfPath = config.getProperty("resolver.tranConfPath", baseTranConfPath);
+	private static final String tranConfPath = config.getProperty("resolver.serverTranServicePath", baseTranConfPath);
 	
 	public static void loadConf() {
 		loadServer();
