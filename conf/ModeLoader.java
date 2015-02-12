@@ -42,7 +42,7 @@ public class ModeLoader extends Loader{
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
 			loadMode(data, file.getAbsolutePath());
 		}
-		logger.info("模式加载完成");
+		logger.info("Load Mode End");
 	}
 	
 	private static void loadMode(ServiceData data, String modeFilePath) {
@@ -86,7 +86,7 @@ public class ModeLoader extends Loader{
 					mode = ClassUtil.newInstance(cls, cls.getConstructor(String.class), false, mode_code);
 					for(String key : param_keys) {
 						ServiceData param_data = mode_param.getServiceData(key);
-						logger.debug("PARAM : {} = {}", param_data.getString("PARAM_CODE"), param_data.getString("PARAM_VALUE"));
+						logger.info("load MODE_PARAM:{} = {}", param_data.getString("PARAM_CODE"), param_data.getString("PARAM_VALUE"));
 						BeanUtil.setProperty(mode, param_data.getString("PARAM_CODE"),param_data.getString("PARAM_VALUE"));
 					}
 				}
@@ -104,18 +104,18 @@ public class ModeLoader extends Loader{
 			throw new SystemException("SYS_RESOLVER_LOAD_MODE_NOT_HAVE_MODE_TYPE_PARAMETER");
 		if (type.equals("0")) {
 			Modes.putFieldMode((FieldMode)mode);
-			logger.info("加载域模式 MODE_CODE -> [{}], MODE_NAME -> [{}], MODE_CLASS -> [{}]", mode_code, mode_name, mode_class);
+			logger.info("Load Field Mode:MODE_CODE -> [{}], MODE_NAME -> [{}], MODE_CLASS -> [{}]", mode_code, mode_name, mode_class);
 		} else if (type.equals("1")) {
 			Modes.putPackageMode((PackageMode)mode);
-			logger.info("加载包模式 MODE_CODE -> [{}], MODE_NAME -> [{}], MODE_CLASS -> [{}]", mode_code, mode_name, mode_class);
+			logger.info("Load Package Mode:MODE_CODE -> [{}], MODE_NAME -> [{}], MODE_CLASS -> [{}]", mode_code, mode_name, mode_class);
 		} else if (type.equals("2")) {
 			Modes.putFieldProcessMode((FieldProcessMode)mode);
-			logger.info("加载域处理模式 MODE_CODE -> [{}], MODE_NAME -> [{}], MODE_CLASS -> [{}]", mode_code, mode_name, mode_class);
+			logger.info("Load Field Process Mode:MODE_CODE -> [{}], MODE_NAME -> [{}], MODE_CLASS -> [{}]", mode_code, mode_name, mode_class);
 		} else if (type.equals("3")) {
 			Modes.putFieldEndProcessMode((FieldEndProcessMode)mode);
-			logger.info("加载域结束处理模式 MODE_CODE -> [{}], MODE_NAME -> [{}], MODE_CLASS -> [{}]", mode_code, mode_name, mode_class);
+			logger.info("Load Field End Process Mode:MODE_CODE -> [{}], MODE_NAME -> [{}], MODE_CLASS -> [{}]", mode_code, mode_name, mode_class);
 		} else {
-			logger.warn("不存在的模式类型 MODE_CODE -> [{}], MODE_NAME -> [{}]", mode_code, mode_name);
+			logger.warn("Not Exist Mode Type:MODE_CODE -> [{}], MODE_NAME -> [{}]", mode_code, mode_name);
 			return;
 		}
 	}

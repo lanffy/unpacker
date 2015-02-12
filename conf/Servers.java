@@ -28,7 +28,7 @@ public class Servers extends Loader{
 	public static void loadServer() {
 		URL url = Servers.class.getResource(serverFilePath);
 		if(url == null) {
-			throw new SystemException("IP-服务系统映射文件不存在").addScene("FilePath", serverFilePath);
+			throw new SystemException("IP-Server Mapping File Is Not Exist").addScene("FilePath", serverFilePath);
 		}
 		File serverFile = new File(url.getFile());
 		try {
@@ -43,7 +43,7 @@ public class Servers extends Loader{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		logger.info("加载服务系统地址映射完成");
+		logger.info("Load Server Address Mapping End");
 	}
 	
 	public static String getServerByIp(String ip) {
@@ -55,6 +55,6 @@ public class Servers extends Loader{
 		String ip_prot = servers[0].trim();
 		String server = servers[1].trim();
 		Servers.put(ip_prot, server);
-		logger.info("加载服务系统地址映射：{} -> {}", ip_prot, server);
+		logger.info("Load Server Address Mapping：{} -> {}", ip_prot, server);
 	}
 }
