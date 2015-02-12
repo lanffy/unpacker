@@ -43,10 +43,11 @@ public class ServerTranInfo {
 	}
 	
 	private String getConfigString(ServiceData data) {
-		return data.getServiceData("STRUCTURE_CONTENT").getString("SDATAS");
+		ServiceData contentData = data.getServiceData("STRUCTURE_CONTENT");
+		return contentData == null ? null : contentData.getString("SDATAS");
 	}
 	
 	private String getMappingScript(ServiceData data) {
-		return data.getString("MAPPING_SCRIPT");
+		return data == null ? null : data.getString("MAPPING_SCRIPT");
 	}
 }

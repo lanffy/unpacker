@@ -43,6 +43,7 @@ public class Servers extends Loader{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		logger.info("加载服务系统地址映射完成");
 	}
 	
 	public static String getServerByIp(String ip) {
@@ -54,5 +55,6 @@ public class Servers extends Loader{
 		String ip_prot = servers[0].trim();
 		String server = servers[1].trim();
 		Servers.put(ip_prot, server);
+		logger.info("加载服务系统地址映射：{} -> {}", ip_prot, server);
 	}
 }

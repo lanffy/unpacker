@@ -38,6 +38,12 @@ public class ConfigLoader extends Loader{
 	private static final String serverPath = config.getProperty("resolver.serverPath", baseServerPath);
 	private static final String tranConfPath = config.getProperty("resolver.serverTranServicePath", baseTranConfPath);
 	
+	public static void main(String[] args) {
+		ModeLoader.loadMode();
+		loadConf();
+		System.out.println("done");
+	}
+	
 	public static void loadConf() {
 		loadServer();
 		loadTranConf();
@@ -54,8 +60,9 @@ public class ConfigLoader extends Loader{
 			StructConfig err_conf = json2IOConfig(serverInfo.getErr_Package_Conf());
 			final PackageConfig head_config = new PackageConfig(req_conf, resp_conf, err_conf); 
 			Configs.putHeadConfig(serverCode, head_config);
-			logger.info("加载服务系统报文头配置：[ {} ].", serverCode);
+			logger.info("加载服务系统报文头配置：[ {} ]", serverCode);
 		}
+		logger.info("加载服务系统报文头配置完成");
 	}
 	
 	private static void loadTranConf() {
@@ -69,8 +76,9 @@ public class ConfigLoader extends Loader{
 			StructConfig resp_conf = json2IOConfig(tranInfo.getResp_Conf());
 			final PackageConfig body_config = new PackageConfig(req_conf, resp_conf);
 			Configs.putBodyConfig(serverCode, tranCode, body_config);
-			logger.info("加载交易报文体配置，服务系统：[ {} ],交易码：[ {} ].", serverCode, tranCode);
+			logger.info("加载服务系统关联交易报文体配置，服务系统：[ {} ],交易码：[ {} ]", serverCode, tranCode);
 		}
+		logger.info("加载服务系统报文体配置完成");
 	}
 	
 	private static StructConfig json2IOConfig(String json) {
