@@ -17,7 +17,7 @@ public class SimulateMsg {
 	// agent_id 采集端ID 短字符串
 	private static String agent_id = "agent_id_value";
 	// msg_id 采集端消息ID 整型
-	private static int msg_id = 8813;
+	private static int msg_id = 529001;
 	// src_ip 发起系统IP 短字符串
 	private static String src_ip = "127.0.0.1";
 	// src_port 发起系统连接端口 整型
@@ -27,7 +27,7 @@ public class SimulateMsg {
 	// dst_port 接收系统连接端口 整型
 	private static int dst_prot = 8881;
 	// packet_type 报文类型（1-请求，2-响应） 整型
-	private static int packet_type = 2;
+	private static int packet_type = 1;
 	// match_id 报文匹配ID 短字符串
 	private static String match_id = "0808";
 	// send_time 发送时间 短字符串
@@ -99,8 +99,10 @@ public class SimulateMsg {
 	}
 	
 	public static void main(String[] args) {
-		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("8813resp");
+//		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("8813resp");
 //		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("8813req");
+		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("805020");
+		msg_id = 880125;
 		ChannelBuffer buffer = packRequestBuffer(sendedBuffer);
 		System.out.println(buffer.toHexString());
 		System.out.println(buffer.readableBytes());

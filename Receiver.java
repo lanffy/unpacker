@@ -28,7 +28,7 @@ import com.wk.sdo.ServiceData;
  */
 public class Receiver {
 	
-	protected static final Log logger = LogFactory.getLog("resolver");
+	protected static final Log logger = LogFactory.getLog();
 	
 	public static void main(String[] args) throws Exception {
 		Servers.loadServer();

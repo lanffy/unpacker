@@ -23,7 +23,7 @@ import com.wk.util.JSONCaseType;
  * @version 2014年11月5日 上午11:18:30
  */
 public class JSONFileUtil {
-	private static final Log logger = LogFactory.getLog("resolver");
+	private static final Log logger = LogFactory.getLog();
 	
 	/**
 	* @description 读取json格式文件内容，转换成ServiceData格式

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Service>
+	<Service_Header>
+		<brno>10604</brno>
+		<tellerno>999999</tellerno>
+		<templatecode>520000</templatecode>
+		<transcode>529001</transcode>
+	</Service_Header>
+	<Service_Body>
+		<Request>
+			<priority>1</priority>
+			<transflag>2</transflag>
+			<cardflag>0</cardflag>
+			<payeracc>6226820010607940188</payeracc>
+			<actpayeracc>6226820010607940188</actpayeracc>
+			<payername>唐永辉</payername>
+			<payeraddr/>
+			<currency>01</currency>
+			<amount>9600000</amount>
+			<payeeacc>6222081502001653576</payeeacc>
+			<payeename>唐永辉</payeename>
+			<payeeaddr>中国工商银行股份有限公司南昌洪都大道支行</payeeaddr>
+			<recvbank>102421000139</recvbank>
+			<recvsettlebank>102421000018</recvsettlebank>
+			<postscript>往来款</postscript>
+			<smr/>
+			<feeamount>1350</feeamount>
+			<transamount>0</transamount>
+			<costamount>0</costamount>
+			<note1>1</note1>
+			<note2>C708BFBBFDFBA5DC</note2>
+			<note3/>
+		</Request>
+		<Attributes>
+			<channelcode>002</channelcode>
+			<channeldate>20140607</channeldate>
+			<channelseq>84719879</channelseq>
+			<channeltime>161954</channeltime>
+			<sysid>000001</sysid>
+		</Attributes>
+	</Service_Body>
+</Service>

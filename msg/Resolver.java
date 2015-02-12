@@ -17,7 +17,7 @@ import com.wk.sdo.ServiceData;
  * @version 2015年2月10日 下午3:55:09
  */
 public class Resolver {
-	private static final Log logger = LogFactory.getLog("resolver");
+	private static final Log logger = LogFactory.getLog();
 	
 	private static String recv_time;
 	private static int msg_id;

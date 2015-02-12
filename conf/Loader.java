@@ -16,7 +16,7 @@ import com.wk.util.FileUtil;
  */
 public class Loader {
 	
-	public static final Log logger = LogFactory.getLog("resolver");
+	public static final Log logger = LogFactory.getLog();
 	
 	public static final SystemConfig config = SystemConfig.getInstance();
 	
