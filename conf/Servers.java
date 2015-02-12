@@ -43,7 +43,7 @@ public class Servers extends Loader{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		logger.info("Load Server Address Mapping End");
+		logger.info("Load Server Address Mapping End ==========================");
 	}
 	
 	public static String getServerByIp(String ip) {

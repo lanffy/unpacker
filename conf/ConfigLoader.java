@@ -62,7 +62,7 @@ public class ConfigLoader extends Loader{
 			Configs.putHeadConfig(serverCode, head_config);
 			logger.info("Load Server Head Config£º[ {} ]", serverCode);
 		}
-		logger.info("Load Server Head Config End");
+		logger.info("Load Server Head Config End ==========================");
 	}
 	
 	private static void loadTranConf() {
@@ -78,7 +78,7 @@ public class ConfigLoader extends Loader{
 			Configs.putBodyConfig(serverCode, tranCode, body_config);
 			logger.info("Load Server Tran Service Body Config, Server -> [ {} ], ServiceCode -> [ {} ]", serverCode, tranCode);
 		}
-		logger.info("Load Server Tran Service Body Config End");
+		logger.info("Load Server Tran Service Body Config End ==========================");
 	}
 	
 	private static StructConfig json2IOConfig(String json) {

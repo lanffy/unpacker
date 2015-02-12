@@ -42,7 +42,7 @@ public class ModeLoader extends Loader{
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
 			loadMode(data, file.getAbsolutePath());
 		}
-		logger.info("Load Mode End");
+		logger.info("Load Mode End ==========================");
 	}
 	
 	private static void loadMode(ServiceData data, String modeFilePath) {
