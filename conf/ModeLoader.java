@@ -42,11 +42,16 @@ public class ModeLoader extends Loader{
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
 			loadMode(data, file.getAbsolutePath());
 		}
+		logger.info("模式加载完成");
 	}
 	
 	private static void loadMode(ServiceData data, String modeFilePath) {
 		if(data == null || data.size() == 0) {
 			logger.warn("加载模式时文件异常,文件内容为空.文件名:{}", modeFilePath);
+			return;
+		}
+		//如果是系统内置模式,则不加载
+		if("1".equals(data.getString("IS_SYS_MODE"))){
 			return;
 		}
 		String mode_code = data.getString("MODE_CODE");
@@ -57,31 +62,36 @@ public class ModeLoader extends Loader{
 			//模式实现类
 			final Class<?> cls = ClassUtil.classFromName(mode_class);
 			ServiceData mode_param = data.getServiceData("MODE_PARAM");
-			String[] param_keys = mode_param.getKeys();
-			//如果是默认包模式
-			if (DefaultPackageMode.class == cls) {
-				final Map<FieldType, FieldMode> map = new HashMap<FieldType, FieldMode>();
-				for(String key : param_keys) {
-					ServiceData param_data = mode_param.getServiceData(key);
-					final String mode_type = param_data.getString("PARAM_CODE");
-					final FieldType ftype;
-					if ("byte[]".equals(mode_type)) {
-						ftype = FieldType.FIELD_IMAGE;
-					} else {
-						ftype = FieldType.getFieldType(mode_type);
+			//加载模式参数
+			if(mode_param != null) {
+				String[] param_keys = mode_param.getKeys();
+				//如果是默认包模式
+				if (DefaultPackageMode.class == cls) {
+					final Map<FieldType, FieldMode> map = new HashMap<FieldType, FieldMode>();
+					for(String key : param_keys) {
+						ServiceData param_data = mode_param.getServiceData(key);
+						final String mode_type = param_data.getString("PARAM_CODE");
+						final FieldType ftype;
+						if ("byte[]".equals(mode_type)) {
+							ftype = FieldType.FIELD_IMAGE;
+						} else {
+							ftype = FieldType.getFieldType(mode_type);
+						}
+						logger.info("load MODE_PARAM:{}, FIELD_MODE: {} = {}",mode_code, ftype, param_data.getString("PARAM_VALUE"));
+						map.put(ftype, Modes.getFieldMode(param_data.getString("PARAM_VALUE")));
 					}
-					logger.info("load MODE_PARAM:{}, FIELD_MODE: {} = {}",mode_code, ftype, param_data.getString("PARAM_VALUE"));
-					map.put(ftype, Modes.getFieldMode(param_data.getString("PARAM_VALUE")));
+					mode = ClassUtil.newInstance(cls, cls.getConstructor(String.class, Map.class), 
+												 false, mode_code, map);
+				} else {
+					mode = ClassUtil.newInstance(cls, cls.getConstructor(String.class), false, mode_code);
+					for(String key : param_keys) {
+						ServiceData param_data = mode_param.getServiceData(key);
+						logger.debug("PARAM : {} = {}", param_data.getString("PARAM_CODE"), param_data.getString("PARAM_VALUE"));
+						BeanUtil.setProperty(mode, param_data.getString("PARAM_CODE"),param_data.getString("PARAM_VALUE"));
+					}
 				}
-				mode = ClassUtil.newInstance(cls, cls.getConstructor(String.class, Map.class), 
-											 false, mode_code, map);
 			} else {
 				mode = ClassUtil.newInstance(cls, cls.getConstructor(String.class), false, mode_code);
-				for(String key : param_keys) {
-					ServiceData param_data = mode_param.getServiceData(key);
-					logger.debug("PARAM : {} = {}", param_data.getString("PARAM_CODE"), param_data.getString("PARAM_VALUE"));
-					BeanUtil.setProperty(mode, param_data.getString("PARAM_CODE"),param_data.getString("PARAM_VALUE"));
-				}
 			}
 		} catch(Throwable t) {
 			t.printStackTrace();
