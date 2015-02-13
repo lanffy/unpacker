@@ -101,8 +101,9 @@ public class SimulateMsg {
 	public static void main(String[] args) {
 //		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("8813resp");
 //		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("8813req");
-		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("805020");
-		msg_id = 880125;
+		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("807030");
+		msg_id = 807030;
+		dst_prot = 8884;
 		ChannelBuffer buffer = packRequestBuffer(sendedBuffer);
 		System.out.println(buffer.toHexString());
 		System.out.println(buffer.readableBytes());
