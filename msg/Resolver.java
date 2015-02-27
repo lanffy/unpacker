@@ -197,11 +197,11 @@ public class Resolver {
 	}
 	
 	private static String getTranCode(ServiceData data, String tranCodeExpr) {
-		if(!tranCodeExpr.contains(">")) {
+		int index = tranCodeExpr.indexOf(">");
+		if(index < 0) {
 			return data.getString(tranCodeExpr);
 		}else  {
-			int index = tranCodeExpr.indexOf(">");
-			return getTranCode(data.getServiceData(tranCodeExpr.substring(0, index)), tranCodeExpr.substring(index));
+			return getTranCode(data.getServiceData(tranCodeExpr.substring(0, index)), tranCodeExpr.substring(index + 1));
 		}
 	}
 	

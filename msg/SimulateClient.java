@@ -6,7 +6,7 @@ package resolver.msg;
  */
 public class SimulateClient {
 	public static void main(String[] args) {
-		String str = "abc>fa>faf>rga";
+		String str = "abcfafafga";
 		System.out.println(str.indexOf(">"));
 	}
 }
