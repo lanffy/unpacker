@@ -5,13 +5,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.HashMap;
 
-import com.wk.lang.SystemException;
-
 /**
- * @description
+ * @description 加载ip地址和服务系统的映射文件
  * @author raoliang
  * @version 2015年2月9日 下午6:36:38
  */
@@ -22,7 +19,7 @@ public class Servers extends Loader{
 	
 	public static void main(String[] args) {
 		loadServer();
-		System.out.println(getServerByIp("127.0.0.1:8080"));
+		System.out.println(getServerByIp("127.0.0.1:8881"));
 	}
 	
 	public static void loadServer() {
