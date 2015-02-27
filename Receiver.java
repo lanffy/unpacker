@@ -73,7 +73,7 @@ class ReqActor<T extends ChannelBufferMsg> extends Actor<Request<T>> {
 		PacketsInfo info = new PacketsInfo(data);
 		Resolver.setMsg_id(info.getMsg_id());
 		ChannelBuffer responseBuffer = Resolver.unpackeTranBuffer(info);
-		Receiver.logger.info("返回响应响应报文:\n{}", responseBuffer.toHexString());
+		Receiver.logger.info("返回响应报文:\n{}", responseBuffer.toHexString());
 		request.doResponse((T)new ChannelBufferMsg(responseBuffer));
 	}
 	

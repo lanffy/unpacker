@@ -80,7 +80,7 @@ public class Resolver {
 		//if need unpacket body
 		if(buffer.readableBytes() > 0) {
 			//识别交易码
-			String sys_service_code = data.getString(TransDistinguishConf.getTranDistField(server));
+			String sys_service_code = getTranCode(data, TransDistinguishConf.getTranDistField(server));
 			//再拆报文体
 			PackageConfig bodyConfig = Configs.getBodyConfig(server, sys_service_code);
 			StructConfig reqBodyConfig = bodyConfig.getRequestConfig();
@@ -115,7 +115,7 @@ public class Resolver {
 		//if need unpacket body
 		if(buffer.readableBytes() > 0) {
 			//识别交易码
-			String sys_service_code = data.getString(TransDistinguishConf.getTranDistField(server));
+			String sys_service_code = getTranCode(data, TransDistinguishConf.getTranDistField(server));
 			//unpacket body
 			PackageConfig bodyConfig = Configs.getBodyConfig(server, sys_service_code);
 			StructConfig respBodyConfig = bodyConfig.getResponseConfig();
@@ -195,5 +195,14 @@ public class Resolver {
 	public static void setRet_msg(String ret_msg) {
 		Resolver.ret_msg = ret_msg;
 	}
-
+	
+	private static String getTranCode(ServiceData data, String tranCodeExpr) {
+		if(!tranCodeExpr.contains(">")) {
+			return data.getString(tranCodeExpr);
+		}else  {
+			int index = tranCodeExpr.indexOf(">");
+			return getTranCode(data.getServiceData(tranCodeExpr.substring(0, index)), tranCodeExpr.substring(index));
+		}
+	}
+	
 }
