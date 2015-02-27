@@ -2,6 +2,7 @@ package resolver.msg;
 
 import resolver.conf.Configs;
 import resolver.conf.Servers;
+import resolver.conf.TransDistinguishConf;
 
 import com.wk.conv.PacketChannelBuffer;
 import com.wk.conv.config.StructConfig;
@@ -31,7 +32,7 @@ public class Resolver {
 					info.getDst_ip()+":"+info.getDst_prot());
 			ret_code = "1";
 			ret_msg = "目的服务系统IP:["+ info.getDst_ip()+":"+info.getDst_prot() + "]不存在";
-			logger.info("组异常响应报文");
+			logger.info("返回异常响应报文");
 			return packResponseBuffer();
 		}
 		logger.info("收到来自ip:[{}]的报文，发往服务系统:[{}],服务系统ip:[{}]",
@@ -58,27 +59,36 @@ public class Resolver {
 			logger.warn("报文类型:[{}]不存在!", typeFlag);
 			ret_code = "2";
 			ret_msg = "报文类型:["+typeFlag+"]不存在!";
-			logger.info("组异常返回报文");
+			logger.info("返回异常响应报文");
 			return packResponseBuffer();
 		}
 		ret_code = "0";
 		ret_msg = "拆包成功";
-		logger.info("组响应报文");
+		logger.info("返回成功响应报文");
 		return packResponseBuffer();
 	}
 	
 	public static void unpackRequestMsg(PacketsInfo info, String server) {
-		PackageConfig headConfig = Configs.getHeadConfig(server);
-		PackageConfig bodyConfig = Configs.getBodyConfig(server, msg_id + "");
-		StructConfig reqHeadConfig = headConfig.getRequestConfig();
-		StructConfig reqBodyConfig = bodyConfig.getRequestConfig();
-		ServiceData data = new ServiceData();
 		PacketChannelBuffer buffer = new PacketChannelBuffer(info.getPacket());
-		
+		ServiceData data = new ServiceData();
+		//先拆报文头，并识别交易
+		PackageConfig headConfig = Configs.getHeadConfig(server);
+		StructConfig reqHeadConfig = headConfig.getRequestConfig();
 		reqHeadConfig.getPackageMode().unpack(buffer, reqHeadConfig, data, buffer.readableBytes());
 		logger.info("拆请求头后,报文:[\n{}\n]", data);
-		reqBodyConfig.getPackageMode().unpack(buffer, reqBodyConfig, data, buffer.readableBytes());
-		logger.info("拆请求体后,报文:[\n{}\n]", data);
+		
+		//if need unpacket body
+		if(buffer.readableBytes() > 0) {
+			//识别交易码
+			String sys_service_code = data.getString(TransDistinguishConf.getTranDistField(server));
+			//再拆报文体
+			PackageConfig bodyConfig = Configs.getBodyConfig(server, sys_service_code);
+			StructConfig reqBodyConfig = bodyConfig.getRequestConfig();
+			reqBodyConfig.getPackageMode().unpack(buffer, reqBodyConfig, data, buffer.readableBytes());
+			logger.info("拆请求体后,报文:[\n{}\n]", data);
+		}else {
+			logger.info("不需要拆报文体");
+		}
 		//TODO: 此处调用转发data的方法
 		
 		//记录已经解析过的请求报文
@@ -95,17 +105,23 @@ public class Resolver {
 	}
 	
 	public static void unpackResponseMsg(PacketsInfo info, String server) {
-		PackageConfig headConfig = Configs.getHeadConfig(server);
-		PackageConfig bodyConfig = Configs.getBodyConfig(server, msg_id + "");
-		StructConfig respHeadConfig = headConfig.getResponseConfig();
-		StructConfig respBodyConfig = bodyConfig.getResponseConfig();
 		ServiceData data = new ServiceData();
 		PacketChannelBuffer buffer = new PacketChannelBuffer(info.getPacket());
-		
+		//先拆报文头
+		PackageConfig headConfig = Configs.getHeadConfig(server);
+		StructConfig respHeadConfig = headConfig.getResponseConfig();
 		respHeadConfig.getPackageMode().unpack(buffer, respHeadConfig, data, buffer.readableBytes());
 		logger.info("拆响应头后,报文:[\n{}\n]", data);
-		respBodyConfig.getPackageMode().unpack(buffer, respBodyConfig, data, buffer.readableBytes());
-		logger.info("拆响应体后,报文:[\n{}\n]", data);
+		//if need unpacket body
+		if(buffer.readableBytes() > 0) {
+			//识别交易码
+			String sys_service_code = data.getString(TransDistinguishConf.getTranDistField(server));
+			//unpacket body
+			PackageConfig bodyConfig = Configs.getBodyConfig(server, sys_service_code);
+			StructConfig respBodyConfig = bodyConfig.getResponseConfig();
+			respBodyConfig.getPackageMode().unpack(buffer, respBodyConfig, data, buffer.readableBytes());
+			logger.info("拆响应体后,报文:[\n{}\n]", data);
+		}
 		//TODO: 此处调用转发data的方法
 		
 		MsgContainer.removeResponseMsg(info.getMatch_id());
