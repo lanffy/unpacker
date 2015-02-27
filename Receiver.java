@@ -6,6 +6,7 @@ import java.util.Date;
 import resolver.conf.ConfigLoader;
 import resolver.conf.ModeLoader;
 import resolver.conf.Servers;
+import resolver.conf.TransDistinguishConf;
 import resolver.msg.DefaultMsg;
 import resolver.msg.PacketsInfo;
 import resolver.msg.Resolver;
@@ -32,6 +33,7 @@ public class Receiver {
 	
 	public static void main(String[] args) throws Exception {
 		Servers.loadServer();
+		TransDistinguishConf.loadTransDistConf();
 		ModeLoader.loadMode();
 		ConfigLoader.loadConf();
 		new Receiver();
@@ -63,9 +65,10 @@ class ReqActor<T extends ChannelBufferMsg> extends Actor<Request<T>> {
 //		System.out.printf("before unpack,buffer length:{%d},buffer:{\n%s\n}",buffer.getInt(), buffer.toHexString());
 		Receiver.logger.info("收到报文,报文长度:[{}],报文:\n{}", buffer.getInt(), buffer.toHexString());
 		
+		//第一次拆包
 		ServiceData data  = DefaultMsg.unpack(new PacketChannelBuffer(buffer));
 		
-		Receiver.logger.info("拆包:{}", data);
+		Receiver.logger.info("第一次拆包:{}", data);
 		
 		PacketsInfo info = new PacketsInfo(data);
 		Resolver.setMsg_id(info.getMsg_id());

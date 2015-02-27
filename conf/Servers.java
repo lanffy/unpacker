@@ -26,17 +26,14 @@ public class Servers extends Loader{
 	}
 	
 	public static void loadServer() {
-		URL url = Servers.class.getResource(serverFilePath);
-		if(url == null) {
-			throw new SystemException("IP-Server Mapping File Is Not Exist").addScene("FilePath", serverFilePath);
-		}
-		File serverFile = new File(url.getFile());
+		File serverFile = getFile(serverFilePath);
 		try {
 			InputStreamReader reader = new InputStreamReader(new FileInputStream(serverFile));
 			BufferedReader in = new BufferedReader(reader);
 			String line = "";
 			while((line=in.readLine()) != null && line.length() != 0) {
-				putServer(line);
+				if(!line.trim().startsWith("#"))
+					putServer(line);
 			}
 			in.close();
 			reader.close();
@@ -47,7 +44,7 @@ public class Servers extends Loader{
 	}
 	
 	public static String getServerByIp(String ip) {
-		return (String)Servers.get(ip);
+		return Servers.get(ip);
 	}
 	
 	private static void putServer(String line) {

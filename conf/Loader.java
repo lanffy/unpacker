@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.List;
 
 import com.wk.SystemConfig;
+import com.wk.lang.SystemException;
 import com.wk.logging.Log;
 import com.wk.logging.LogFactory;
 import com.wk.util.FileUtil;
@@ -30,5 +31,13 @@ public class Loader {
 		}
 		List<File> fileList = FileUtil.listAllFiles(new File(url.getFile()));
 		return fileList;
+	}
+	
+	protected static File getFile(String filePaht) {
+		URL url = Servers.class.getResource(filePaht);
+		if(url == null) {
+			throw new SystemException("Configing File Is Not Exist").addScene("FilePath", filePaht);
+		}
+		return new File(url.getFile());
 	}
 }
