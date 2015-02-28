@@ -6,7 +6,7 @@ import com.wk.conv.mode.VRouterPackageMode;
 import com.wk.sdo.ServiceData;
 
 /**
- * @description VRouter报文拆组包
+ * @description VRouter报文拆组包,用于拆符合解析器接口的报文
  * @author raoliang
  * @version 2015年2月2日 下午7:33:55
  */

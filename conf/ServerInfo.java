@@ -3,7 +3,7 @@ package resolver.conf;
 import com.wk.sdo.ServiceData;
 
 /**
- * @description
+ * @description 服务系统配置参数
  * @author raoliang
  * @version 2015年2月9日 上午11:10:04
  */

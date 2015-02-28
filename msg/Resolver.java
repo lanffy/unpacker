@@ -13,7 +13,7 @@ import com.wk.nio.ChannelBuffer;
 import com.wk.sdo.ServiceData;
 
 /**
- * @description
+ * @description 解析器拆交易报文
  * @author raoliang
  * @version 2015年2月10日 下午3:55:09
  */

@@ -9,7 +9,7 @@ import com.wk.net.ChannelBufferMsg;
 import com.wk.nio.ChannelBuffer;
 
 /**
- * @description
+ * @description 报文读取类
  * @author raoliang
  * @version 2015年1月20日 上午9:39:34
  */

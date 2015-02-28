@@ -6,7 +6,7 @@ import com.wk.eai.config.PackageConfig;
 import com.wk.lang.SystemException;
 
 /**
- * @description
+ * @description 报文配置容器
  * @author raoliang
  * @version 2015年2月9日 下午3:40:59
  */
@@ -15,10 +15,21 @@ public class Configs extends Loader{
 	private static final HashMap<String, PackageConfig> headConfigs = new HashMap<String, PackageConfig>();
 	private static final HashMap<String, PackageConfig> bodyConfigs = new HashMap<String, PackageConfig>();
 	
+	/**
+	* @description 保存报文头配置
+	* @param serverCode 服务系统编码
+	* @param value 报文头配置
+	*/
 	public static void putHeadConfig(String serverCode, PackageConfig value) {
 		headConfigs.put(serverCode, value);
 	}
 	
+	/**
+	* @description 保存报文体配置
+	* @param serverCode 服务系统编码
+	* @param tranCode 交易码
+	* @param value 报文体配置
+	*/
 	public static void putBodyConfig(String serverCode, String tranCode, PackageConfig value) {
 		bodyConfigs.put(serverCode + "_" + tranCode, value);
 	}

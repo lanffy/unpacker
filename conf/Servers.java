@@ -7,8 +7,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
+import com.wk.lang.SystemException;
+
 /**
- * @description 加载ip地址和服务系统的映射文件
+ * @description 加载ip地址和服务系统的映射文件<br/>
+ * <pre> ip地址和端口与对应的服务系统映射保存在<code>server.properties</code>
+ * 文件中，每行表示一条映射，格式为：<code>ip:port=serverCode</code></pre>
  * @author raoliang
  * @version 2015年2月9日 下午6:36:38
  */
@@ -45,10 +49,23 @@ public class Servers extends Loader{
 	}
 	
 	private static void putServer(String line) {
+		if(line.indexOf("=") < 0) {
+			throw new SystemException(
+					"SYS_RESOLVER_SERVER_MAPPING_CONFIG_FORMAT_ERROR")
+					.addScene("filePath", serverFilePath)
+					.addScene("line", line);
+		}
 		String[] servers = line.split("=");
 		String ip_prot = servers[0].trim();
 		String server = servers[1].trim();
+		if(ip_prot.length() == 0 || server.length() == 0) {
+			throw new SystemException(
+					"SYS_RESOLVER_SERVER_MAPPING_CONFIG_CONTENT_ERROR")
+					.addScene("filePath", serverFilePath)
+					.addScene("line", line);
+		}
 		Servers.put(ip_prot, server);
 		logger.info("Load Server Address Mapping：{} -> {}", ip_prot, server);
 	}
+	
 }

@@ -10,7 +10,7 @@ import com.wk.conv.mode.PackageMode;
 import com.wk.sdo.FieldType;
 
 /**
- * @description
+ * @description 安徽核心服务系统拆包模式类 用于测试
  * @author raoliang
  * @version 2015年2月2日 上午11:00:38
  */

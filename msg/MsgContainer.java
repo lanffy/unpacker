@@ -3,7 +3,7 @@ package resolver.msg;
 import java.util.HashMap;
 
 /**
- * @description
+ * @description 报文容器工具
  * @author raoliang
  * @version 2015年2月10日 上午10:41:15
  */

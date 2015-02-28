@@ -3,7 +3,7 @@ package resolver.msg;
 import com.wk.sdo.ServiceData;
 
 /**
- * @description
+ * @description 解析器报文接口
  * @author raoliang
  * @version 2015年2月9日 下午4:16:04
  */

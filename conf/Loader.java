@@ -11,7 +11,7 @@ import com.wk.logging.LogFactory;
 import com.wk.util.FileUtil;
 
 /**
- * @description 加载公共方法
+ * @description 加载公共方类
  * @author raoliang
  * @version 2015年2月4日 下午4:28:18
  */

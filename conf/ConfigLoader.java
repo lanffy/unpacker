@@ -26,7 +26,7 @@ import com.wk.util.JSON;
 import com.wk.util.StringUtil;
 
 /**
- * @description 加载报文配置
+ * @description 加载报文配置:服务系统配置和相关关联交易配置
  * @author raoliang
  * @version 2015年2月4日 下午4:06:26
  */

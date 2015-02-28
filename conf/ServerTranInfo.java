@@ -3,7 +3,7 @@ package resolver.conf;
 import com.wk.sdo.ServiceData;
 
 /**
- * @description
+ * @description 关联交易报文配置
  * @author raoliang
  * @version 2015年2月9日 下午2:12:32
  */
