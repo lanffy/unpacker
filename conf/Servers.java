@@ -32,7 +32,7 @@ public class Servers extends Loader{
 			InputStreamReader reader = new InputStreamReader(new FileInputStream(serverFile));
 			BufferedReader in = new BufferedReader(reader);
 			String line = "";
-			while((line=in.readLine()) != null && line.length() != 0) {
+			while((line=in.readLine()) != null && line.trim().length() != 0) {
 				if(!line.trim().startsWith("#"))
 					putServer(line);
 			}
