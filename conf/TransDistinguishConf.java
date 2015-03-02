@@ -10,7 +10,7 @@ import java.util.HashMap;
 import com.wk.lang.SystemException;
 
 /**
- * @description 加载各个服务系统报文头中表示关联交易的字段<br/>
+ * @description 加载各个服务系统报文头中表示交易码的字段<br/>
  * <pre>保存文件：tranDist.properties.每行表示一个服务系统配置。
  * 保存格式为：<strong>服务系统编码=报文头中表示关联交易的字段名称</strong>
  * 如果字段处于一个结构中则格式为：
