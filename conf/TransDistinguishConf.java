@@ -26,7 +26,9 @@ public class TransDistinguishConf extends Loader{
 	
 	public static void main(String[] args) {
 		loadTransDistConf();
+		System.out.println(getTranDistField("outsys"));
 		System.out.println(getTranDistField("hxzh-nb"));
+		System.out.println(getTranDistField("hxzh-tb"));
 	}
 	
 	public static void loadTransDistConf() {
@@ -35,9 +37,10 @@ public class TransDistinguishConf extends Loader{
 			InputStreamReader reader = new InputStreamReader(new FileInputStream(confFile));
 			BufferedReader in = new BufferedReader(reader);
 			String line = "";
-			while((line=in.readLine()) != null && line.trim().length() != 0) {
-				if(!line.trim().startsWith("#"))
-					putConf(line);
+			while((line=in.readLine()) != null) {
+				if(line.trim().length() == 0 || line.startsWith("#"))
+					continue;
+				putConf(line);
 			}
 			in.close();
 			reader.close();

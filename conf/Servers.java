@@ -24,6 +24,9 @@ public class Servers extends Loader{
 	public static void main(String[] args) {
 		loadServer();
 		System.out.println(getServerByIp("127.0.0.1:8881"));
+		System.out.println(getServerByIp("127.0.0.1:8882"));
+		System.out.println(getServerByIp("127.0.0.1:8883"));
+		System.out.println(getServerByIp("127.0.0.1:8884"));
 	}
 	
 	public static void loadServer() {
@@ -32,9 +35,10 @@ public class Servers extends Loader{
 			InputStreamReader reader = new InputStreamReader(new FileInputStream(serverFile));
 			BufferedReader in = new BufferedReader(reader);
 			String line = "";
-			while((line=in.readLine()) != null && line.trim().length() != 0) {
-				if(!line.trim().startsWith("#"))
-					putServer(line);
+			while((line=in.readLine()) != null) {
+				if(line.trim().length() == 0 || line.startsWith("#"))
+					continue;
+				putServer(line);
 			}
 			in.close();
 			reader.close();
