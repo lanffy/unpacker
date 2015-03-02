@@ -1,2 +1,2 @@
 # unpacker
-a tool for unpack buffer
+unpack buffer
