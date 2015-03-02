@@ -1,8 +1,5 @@
 package resolver;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import resolver.conf.ConfigLoader;
 import resolver.conf.ModeLoader;
 import resolver.conf.Servers;
@@ -10,6 +7,8 @@ import resolver.conf.TransDistinguishConf;
 import resolver.msg.DefaultMsg;
 import resolver.msg.PacketsInfo;
 import resolver.msg.Resolver;
+import resolver.msg.ResponseInfo;
+import resolver.msg.ResponseMsg;
 
 import com.wk.actor.Actor;
 import com.wk.conv.PacketChannelBuffer;
@@ -59,27 +58,23 @@ class ReqActor<T extends ChannelBufferMsg> extends Actor<Request<T>> {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void act(Request<T> request) {
-		Resolver.setRecv_time(getTime());
+		ResponseInfo responseInfo = new ResponseInfo();
 		ChannelBuffer buffer = request.getRequestMsg().toChannelBuffer();
 		
-//		System.out.printf("before unpack,buffer length:{%d},buffer:{\n%s\n}",buffer.getInt(), buffer.toHexString());
 		Receiver.logger.info("收到报文,报文长度:[{}],报文:\n{}", buffer.getInt(), buffer.toHexString());
 		
 		//第一次拆包
 		ServiceData data  = DefaultMsg.unpack(new PacketChannelBuffer(buffer));
-		
 		Receiver.logger.info("第一次拆包:{}", data);
 		
 		PacketsInfo info = new PacketsInfo(data);
-		Resolver.setMsg_id(info.getMsg_id());
-		ChannelBuffer responseBuffer = Resolver.unpackeTranBuffer(info);
-		Receiver.logger.info("返回响应报文:\n{}", responseBuffer.toHexString());
-		request.doResponse((T)new ChannelBufferMsg(responseBuffer));
-	}
-	
-	private static String getTime() {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");//设置日期格式
-		return df.format(new Date());// new Date()为获取当前系统时间
+		responseInfo.setMsg_id(info.getMsg_id());
+		ChannelBuffer responseBuffer = Resolver.unpackeTranBuffer(info, responseInfo);
+		ChannelBufferMsg respMsg = new ChannelBufferMsg(responseBuffer);
+		ServiceData respData = DefaultMsg.unpack(new PacketChannelBuffer(responseBuffer));
+		Receiver.logger.info("返回响应报文JSON：\n{}", respData);
+		Receiver.logger.info("返回响应报文Hex: \n{}", responseBuffer.toHexString());
+		request.doResponse((T)respMsg);
 	}
 	
 }

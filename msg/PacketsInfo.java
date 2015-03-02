@@ -74,6 +74,18 @@ public class PacketsInfo {
 	public byte[] getPacket() {
 		return data.getImage("packet");
 	}
+	
+	public String toString() {
+		return data.toString();
+	}
+
+	public ServiceData getData() {
+		return data;
+	}
+
+	public void setData(ServiceData data) {
+		this.data = data;
+	}
 
 	/**
 	// agent_id ²É¼¯¶ËID ¶Ì×Ö·û´®
