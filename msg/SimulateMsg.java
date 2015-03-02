@@ -67,9 +67,10 @@ public class SimulateMsg {
 		//字段类型
 		buffer.putByte((byte)0x07);
 		//字段值长度
-		buffer.putByte((byte)attr_value.length());
+		byte[] bytes = attr_value.getBytes();
+		buffer.putByte((byte)bytes.length);
 		//字段值
-		buffer.putBytes(attr_value.getBytes());
+		buffer.putBytes(bytes);
 	}
 	
 	public static void putIntAttr(String attr_name, int attr_value) {
