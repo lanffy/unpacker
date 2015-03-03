@@ -1,5 +1,6 @@
 package resolver;
 
+import resolver.conf.ChannelDistConf;
 import resolver.conf.ConfigLoader;
 import resolver.conf.ModeLoader;
 import resolver.conf.Servers;
@@ -33,6 +34,7 @@ public class Receiver {
 		logger.info("begin start...");
 		Servers.loadServer();
 		TransDistinguishConf.loadTransDistConf();
+		ChannelDistConf.loadChannelDistConf();
 		ModeLoader.loadMode();
 		ConfigLoader.loadConf();
 		new Receiver();
@@ -61,11 +63,10 @@ class ReqActor<T extends ChannelBufferMsg> extends Actor<Request<T>> {
 		ResponseInfo responseInfo = new ResponseInfo();
 		ChannelBuffer buffer = request.getRequestMsg().toChannelBuffer();
 		
-		Receiver.logger.info("收到报文,报文长度:[{}],报文:\n{}", buffer.getInt(), buffer.toHexString());
+		Receiver.logger.info("收到报文,报文长度:[{}],报文:\n{}", buffer.getInt() - 4, buffer.toHexString());
 		
 		//第一次拆包
 		ServiceData data  = DefaultMsg.unpack(new PacketChannelBuffer(buffer));
-		Receiver.logger.info("第一次拆包:{}", data);
 		
 		PacketsInfo info = new PacketsInfo(data);
 		responseInfo.setMsg_id(info.getMsg_id());

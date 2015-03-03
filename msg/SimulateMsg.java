@@ -103,7 +103,9 @@ public class SimulateMsg {
 //		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("807030");
 		
 //		ChannelBuffer buffer = proBuffer8813req();
-		ChannelBuffer buffer = proBuffer8813resp();
+//		ChannelBuffer buffer = proBuffer8813resp();
+//		ChannelBuffer buffer = proBuffer806010req();
+		ChannelBuffer buffer = proBuffer806010resp();
 		System.out.println(buffer.toHexString());
 		System.out.println(buffer.readableBytes());
 		System.out.println(buffer.capacity());
@@ -115,21 +117,21 @@ public class SimulateMsg {
 		src_ip = "123.123.123.86";
 		src_port = 80601;
 		dst_ip = "127.0.0.1";
-		dst_port = 8882;
+		dst_port = 8883;
 		packet_type = 1;
-		match_id = "529001buffer";
-		return packRequestBuffer(BufferReader.createRequestMsg("529001"));
+		match_id = "806010buffer";
+		return packRequestBuffer(BufferReader.createRequestMsg("806010"));
 	}
 	
 	public static ChannelBuffer proBuffer806010resp() {
-		msg_id = 5290011;
-		src_ip = "123.123.123.1";
-		src_port = 52900;
+		msg_id = 8060102;
+		src_ip = "123.123.123.86";
+		src_port = 80601;
 		dst_ip = "127.0.0.1";
-		dst_port = 8882;
-		packet_type = 1;
-		match_id = "529001buffer";
-		return packRequestBuffer(BufferReader.createRequestMsg("529001"));
+		dst_port = 8883;
+		packet_type = 2;
+		match_id = "806010buffer";
+		return packRequestBuffer(BufferReader.createRequestMsg("806010"));
 	}
 	
 	public static ChannelBuffer proBuffer8813req() {

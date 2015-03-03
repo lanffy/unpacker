@@ -38,7 +38,7 @@ public class TransDistinguishConf extends Loader{
 			BufferedReader in = new BufferedReader(reader);
 			String line = "";
 			while((line=in.readLine()) != null) {
-				if(line.trim().length() == 0 || line.startsWith("#"))
+				if(line.trim().length() == 0 || line.startsWith("#") || !line.contains("="))
 					continue;
 				putConf(line);
 			}
@@ -55,12 +55,6 @@ public class TransDistinguishConf extends Loader{
 	}
 	
 	private static void putConf(String line) {
-		if(line.indexOf("=") < 0) {
-			throw new SystemException(
-					"SYS_RESOLVER_TRANDIST_MAPPING_CONFIG_FORMAT_ERROR")
-					.addScene("filePath", transConfFilePath)
-					.addScene("line", line);
-		}
 		String[] confs = line.split("=");
 		String service = confs[0].trim();
 		String tran_field = confs[1].trim();
