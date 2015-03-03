@@ -8,7 +8,6 @@ import resolver.msg.DefaultMsg;
 import resolver.msg.PacketsInfo;
 import resolver.msg.Resolver;
 import resolver.msg.ResponseInfo;
-import resolver.msg.ResponseMsg;
 
 import com.wk.actor.Actor;
 import com.wk.conv.PacketChannelBuffer;
