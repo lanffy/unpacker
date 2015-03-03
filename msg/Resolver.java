@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import resolver.conf.ChannelDistConf;
 import resolver.conf.Configs;
 import resolver.conf.Servers;
 import resolver.conf.TransDistinguishConf;
@@ -128,7 +129,7 @@ public class Resolver {
 				logger.info("不需要拆请求报文体");
 			}
 			//根据接收系统ip和发送系统ip确定发送渠道名称
-			String send_sys = resolver.conf.ChannelDistConf.getChannelName(info
+			String send_sys = ChannelDistConf.getChannelName(info
 					.getSrc_ip()
 					+ "+"
 					+ info.getDst_ip()
