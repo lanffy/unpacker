@@ -109,7 +109,19 @@ public class SimulateMsg {
 		System.out.println(buffer.capacity());
 	}
 	
-	public static ChannelBuffer proBuffer529001req() {
+	
+	public static ChannelBuffer proBuffer806010req() {
+		msg_id = 8060101;
+		src_ip = "123.123.123.86";
+		src_port = 80601;
+		dst_ip = "127.0.0.1";
+		dst_port = 8882;
+		packet_type = 1;
+		match_id = "529001buffer";
+		return packRequestBuffer(BufferReader.createRequestMsg("529001"));
+	}
+	
+	public static ChannelBuffer proBuffer806010resp() {
 		msg_id = 5290011;
 		src_ip = "123.123.123.1";
 		src_port = 52900;
