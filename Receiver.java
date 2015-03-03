@@ -30,6 +30,7 @@ public class Receiver {
 	protected static final Log logger = LogFactory.getLog();
 	
 	public static void main(String[] args) throws Exception {
+		logger.info("begin start...");
 		Servers.loadServer();
 		TransDistinguishConf.loadTransDistConf();
 		ModeLoader.loadMode();

@@ -1,5 +1,10 @@
 package resolver.msg;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+
 import resolver.conf.Configs;
 import resolver.conf.Servers;
 import resolver.conf.TransDistinguishConf;
@@ -37,43 +42,56 @@ public class Resolver {
 		String ret_code = "0";
 		String ret_msg = "拆包成功";
 		String loggermsg = "返回正常报文";
+		Writer writer = new StringWriter();
 		int typeFlag = info.getPacket_type();
 		try {
 			if(typeFlag == 1) {
 				logger.info("报文类型：[{}]", "request");
 				//如果是请求报文，则直接拆包
 				unpackRequestMsg(info, server);
+				ret_msg = "拆请求报文成功";
 			}else if(typeFlag == 2){
 				logger.info("报文类型：[{}]", "response");
 				String unpackedServer = MsgContainer.getUnpackedServerCode(info.getMatch_id());
 				if(unpackedServer != null) {
 					logger.info("收到已经解析过有对应请求报文的响应报文,根据请求报文拆包");
 					unpackResponseMsg(info, server);
+					ret_msg = "拆响应报文成功";
 				}else {
+					ret_code = "6";
+					ret_msg = "收到无对应请求报文的响应报文,暂时保存,不拆包.";
 					MsgContainer.putResponseMsg(info);
-					logger.info("收到无对应请求报文的响应报文,暂时保存,不拆包.");
+					loggermsg = ret_msg;
 				}
 			}else {
-				responseInfo.setRet_code("2");
-				responseInfo.setRet_msg("报文类型:["+typeFlag+"]不存在!");
-				logger.error("报文类型:[{}]不存在!返回异常响应报文", typeFlag);
-				return ResponseMsg.packRepMsg(responseInfo);
+				ret_code = "2";
+				ret_msg = "报文类型:["+typeFlag+"]不存在!";
+				loggermsg = ret_msg;
 			}
 		} catch (UnpackRequestException e) {
 			ret_code = "3";
 			ret_msg = "拆请求报文异常!";
-			e.printStackTrace();
+			e.printStackTrace(new PrintWriter(writer));
+			logger.error("{}", writer.toString());
 			loggermsg = "拆请求报文异常,serverCode:{},返回异常报文";
 		} catch (UnpackResponseException e) {
 			ret_code = "4";
 			ret_msg = "拆响应报文异常!";
-			e.printStackTrace();
+			e.printStackTrace(new PrintWriter(writer));
+			logger.error("{}", writer.toString());
 			loggermsg = "拆响应报文异常,serverCode:{},返回异常报文";
 		} catch (Exception e) {
 			ret_code = "5";
 			ret_msg = "拆报文异常!";
-			e.printStackTrace();
+			e.printStackTrace(new PrintWriter(writer));
+			logger.error("{}", writer.toString());
 			loggermsg = "拆报文异常,serverCode:{},返回异常报文";
+		}finally {
+			try {
+				writer.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		responseInfo.setRet_code(ret_code);
 		responseInfo.setRet_msg(ret_msg);

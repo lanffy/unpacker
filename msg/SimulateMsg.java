@@ -25,7 +25,7 @@ public class SimulateMsg {
 	// dst_ip 接收系统IP 短字符串
 	private static String dst_ip = "127.0.0.1";
 	// dst_port 接收系统连接端口 整型
-	private static int dst_prot = 8881;
+	private static int dst_port = 8881;
 	// packet_type 报文类型（1-请求，2-响应） 整型
 	private static int packet_type = 1;
 	// match_id 报文匹配ID 短字符串
@@ -46,7 +46,7 @@ public class SimulateMsg {
 		putStringAttr("src_ip", src_ip);
 		putIntAttr("src_port", src_port);
 		putStringAttr("dst_ip", dst_ip);
-		putIntAttr("dst_prot", dst_prot);
+		putIntAttr("dst_prot", dst_port);
 		putIntAttr("packet_type", packet_type);
 		putStringAttr("match_id", match_id);
 		putStringAttr("send_time", send_time);
@@ -100,15 +100,46 @@ public class SimulateMsg {
 	}
 	
 	public static void main(String[] args) {
-//		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("8813resp");
-//		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("8813req");
-		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("807030");
-		msg_id = 807030;
-		dst_prot = 8884;
-		ChannelBuffer buffer = packRequestBuffer(sendedBuffer);
+//		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("807030");
+		
+//		ChannelBuffer buffer = proBuffer8813req();
+		ChannelBuffer buffer = proBuffer8813resp();
 		System.out.println(buffer.toHexString());
 		System.out.println(buffer.readableBytes());
 		System.out.println(buffer.capacity());
+	}
+	
+	public static ChannelBuffer proBuffer529001req() {
+		msg_id = 5290011;
+		src_ip = "123.123.123.1";
+		src_port = 52900;
+		dst_ip = "127.0.0.1";
+		dst_port = 8882;
+		packet_type = 1;
+		match_id = "529001buffer";
+		return packRequestBuffer(BufferReader.createRequestMsg("529001"));
+	}
+	
+	public static ChannelBuffer proBuffer8813req() {
+		msg_id = 88131;
+		src_ip = "123.123.123.123";
+		src_port = 88131;
+		dst_ip = "127.0.0.1";
+		dst_port = 8885;
+		packet_type = 1;
+		match_id = "8813buffer";
+		return packRequestBuffer(BufferReader.createRequestMsg("8813req"));
+	}
+	
+	public static ChannelBuffer proBuffer8813resp() {
+		msg_id = 88131;
+		src_ip = "123.123.123.123";
+		src_port = 88131;
+		dst_ip = "127.0.0.1";
+		dst_port = 8885;
+		packet_type = 2;
+		match_id = "8813buffer";
+		return packRequestBuffer(BufferReader.createRequestMsg("8813resp"));
 	}
 	
 	public static String getTime() {
