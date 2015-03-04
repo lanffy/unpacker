@@ -14,11 +14,11 @@ import resolver.excption.UnpackResponseException;
 
 import com.wk.conv.PacketChannelBuffer;
 import com.wk.conv.config.StructConfig;
+import com.wk.conv.mode.PackageMode;
 import com.wk.eai.config.PackageConfig;
 import com.wk.lang.SystemException;
 import com.wk.logging.Log;
 import com.wk.logging.LogFactory;
-import com.wk.net.JSONMsg;
 import com.wk.nio.ChannelBuffer;
 import com.wk.sdo.ServiceData;
 
@@ -29,6 +29,7 @@ import com.wk.sdo.ServiceData;
  */
 public class Resolver {
 	private static final Log logger = LogFactory.getLog();
+	private static final SendClient client = new SendClient();
 	
 	public static ChannelBuffer unpackeTranBuffer(PacketsInfo info, ResponseInfo responseInfo) {
 		String server = Servers.getServerByIp(info.getDst_ip() + ":" + info.getDst_prot());
@@ -113,9 +114,14 @@ public class Resolver {
 			reqHeadConfig.getPackageMode().unpack(buffer, reqHeadConfig, tran_data, buffer.readableBytes());
 			logger.info("拆请求头后,报文:[\n{}\n]", tran_data);
 			
+			String sys_service_code = null;
+			//TODO:如果没有报文头配置,通过配置识别交易码
+			if(tran_data.size() == 0) {
+			
+			}
+			
 			//if need unpacket body
 			PackageConfig bodyConfig = null;
-			String sys_service_code = null;
 			if(buffer.readableBytes() > 0) {
 				//识别交易码
 				sys_service_code = getTranCode(tran_data, TransDistinguishConf.getTranDistField(server));
@@ -126,7 +132,8 @@ public class Resolver {
 				reqBodyConfig.getPackageMode().unpack(buffer, reqBodyConfig, tran_data, buffer.readableBytes());
 				logger.info("拆请求体后,报文:[\n{}\n]", tran_data);
 			}else {
-				logger.info("不需要拆请求报文体");
+				sys_service_code = getTranCode(tran_data, TransDistinguishConf.getTranDistField(server));
+				logger.info("不需要拆请求报文体,从拆得的报文中取得交易码：{}.", sys_service_code);
 			}
 			//根据接收系统ip和发送系统ip确定发送渠道名称
 			String send_sys = ChannelDistConf.getChannelName(info
@@ -144,7 +151,7 @@ public class Resolver {
 				logger.debug("被传输的请求数据：\n{}", data);
 			}
 			//TODO: 此处调用转发data的方法
-			new SimulateClient().send(new JSONMsg(data));
+//			client.send(new JSONMsg(data));
 			
 			//记录已经解析过的请求报文match_id : server：服务系统编码；sys_service_code：交易码；send_sys:发送渠道编码
 			MsgContainer.putUnpackedServerCode(info.getMatch_id(), server+">"+sys_service_code+">"+send_sys);
@@ -199,7 +206,7 @@ public class Resolver {
 			logger.debug("被传输的响应数据：\n{}", data);
 		}
 		//TODO: 此处调用转发data的方法
-		new SimulateClient().send(new JSONMsg(data));
+//		client.send(new JSONMsg(data));
 		
 		removeInfo(info);
 	}

@@ -15,16 +15,16 @@ import com.wk.sdo.ServiceData;
  * @author raoliang
  * @version 2015年2月27日 上午11:36:16
  */
-public class SimulateClient {
+public class SendClient {
 	
 	private ClientCommManager client;
 	
-	public SimulateClient() {
+	public SendClient() {
 		client = getServerCommManager();
 	}
 	
 	private ClientCommManager getServerCommManager(){
-		return CommManagers.getClientCommManager("simulateClient", JSONMsg.class, com.wk.net.NullResponseActor.class);
+		return CommManagers.getClientCommManager("sendClient", JSONMsg.class, com.wk.net.NullResponseActor.class);
 	}
 	
 	public void send(Msg msg) {
@@ -35,7 +35,7 @@ public class SimulateClient {
 		ServiceData data = new ServiceData();
 		data.putString("key", "value");
 		JSONMsg jsonmsg = new JSONMsg(data);
-		new SimulateClient().send(jsonmsg);
+		new SendClient().send(jsonmsg);
 		Thread.sleep(Integer.MAX_VALUE);
 	}
 	
