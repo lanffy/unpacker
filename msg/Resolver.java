@@ -32,17 +32,17 @@ public class Resolver {
 	private static final SendClient client = new SendClient();
 	
 	public static ChannelBuffer unpackeTranBuffer(PacketsInfo info, ResponseInfo responseInfo) {
-		String server = Servers.getServerByIp(info.getDst_ip() + ":" + info.getDst_prot());
+		String ip_server = info.getDst_ip() + ":" + info.getDst_prot();
+		String server = Servers.getServerByIp(ip_server);
 		if(server == null) {
-			logger.warn("目的服务系统IP:[{}]不存在，请查看相应配置文件中是否配置!",
-					info.getDst_ip()+":"+info.getDst_prot());
+			logger.warn("目的服务系统IP映射不存在，请查看配置文件server.properties中是否配置[{}]的值!",
+					ip_server);
 			responseInfo.setRet_code("1");
-			responseInfo.setRet_msg("目的服务系统IP:["+ info.getDst_ip()+":"+info.getDst_prot() + "]不存在");
+			responseInfo.setRet_msg("目的服务系统IP映射不存在，请查看配置文件server.properties中是否配置[" + ip_server+ "]的值!");
 			logger.info("返回异常响应报文");
 			return ResponseMsg.packRepMsg(responseInfo);
 		}
-		logger.info("收到来自ip:[{}]的报文，发往服务系统:[{}],服务系统ip:[{}]",
-				info.getSrc_ip(), server, info.getDst_ip()+":"+info.getDst_prot());
+		logger.info("收到来自ip:[{}]的报文，发往服务系统:[{} -> {}]", info.getSrc_ip(), server, ip_server);
 		String ret_code = "0";
 		String ret_msg = "拆包成功";
 		String loggermsg = "返回正常报文";
@@ -51,7 +51,6 @@ public class Resolver {
 		try {
 			if(typeFlag == 1) {
 				logger.info("报文类型：[{}]", "request");
-				//如果是请求报文，则直接拆包
 				unpackRequestMsg(info, server);
 				ret_msg = "拆请求报文成功";
 			}else if(typeFlag == 2){
@@ -120,7 +119,8 @@ public class Resolver {
 			if(sys_service_code == null) {
 				sys_service_code = getTranCode(tranCodeExpr, tempBuffer);
 				if(sys_service_code == null) {
-					throw new UnpackRequestException("获取交易码失败,请查看配置是否正确.").addScene("Server", server);
+					throw new UnpackRequestException("获取交易码失败,请查看配置是否正确.")
+						.addScene("config_file", "tranDist.properties").addScene("Server", server);
 				}
 			}
 			logger.info("获取交易码：{}", sys_service_code);
@@ -136,13 +136,15 @@ public class Resolver {
 				logger.info("不需要拆请求报文体.");
 			}
 			//根据接收系统ip和发送系统ip确定发送渠道名称
-			String send_sys = ChannelDistConf.getChannelName(info
-					.getSrc_ip()
-					+ "+"
-					+ info.getDst_ip()
-					+ ":"
-					+ info.getDst_prot());
-			
+			String send_sys_expr = info.getSrc_ip() + "+" + info.getDst_ip()
+					+ ":" + info.getDst_prot();
+			String send_sys = ChannelDistConf.getChannelName(send_sys_expr);
+			if(send_sys == null) {
+				logger.error("识别发送渠道失败,请查看配置文件channels.properites文件中是否配置[{}]的值.", send_sys_expr);
+				throw new UnpackRequestException("识别发送渠道失败")
+					.addScene("config_file", "channels.properties")
+					.addScene("parameter", send_sys_expr);
+			}
 			data.putServiceData("packet", tran_data);
 			data.putString("recv_sys", server);
 			data.putString("tran_code", sys_service_code);
