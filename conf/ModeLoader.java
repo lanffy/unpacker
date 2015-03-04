@@ -34,8 +34,9 @@ public class ModeLoader extends Loader{
 		loadMode();
 //		DefaultPackageMode mode = (DefaultPackageMode) Modes.getPackageMode("outsys_mode");
 //		DefaultPackageMode mode = (DefaultPackageMode) Modes.getPackageMode("standard");
-		FieldProcessMode mode = Modes.getFieldProcessMode("ftp-download");
-		System.out.println(mode.getName());
+//		FieldProcessMode mode = Modes.getFieldProcessMode("ftp-download");
+//		System.out.println(mode.getName());
+		System.out.println(Modes.getPackageMode("outsys_mode").getName());
 	}
 	
 	public static void loadMode() {

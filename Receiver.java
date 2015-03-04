@@ -33,9 +33,9 @@ public class Receiver {
 	public static void main(String[] args) throws Exception {
 		logger.info("begin start...");
 		Servers.loadServer();
+		ModeLoader.loadMode();
 		TransDistinguishConf.loadTransDistConf();
 		ChannelDistConf.loadChannelDistConf();
-		ModeLoader.loadMode();
 		ConfigLoader.loadConf();
 		new Receiver();
 		logger.info("listening...");

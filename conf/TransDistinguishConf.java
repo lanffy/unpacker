@@ -65,6 +65,6 @@ public class TransDistinguishConf extends Loader{
 					.addScene("line", line);
 		}
 		trans.put(service, tran_field);
-		logger.info("Load Transaction Distinguish Config£º{} -> {}", service, tran_field);
+		logger.info("Load Transaction Distinguish Config£º{} -> [{}]", service, tran_field);
 	}
 }

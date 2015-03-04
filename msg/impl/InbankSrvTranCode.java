@@ -3,7 +3,7 @@ package resolver.msg.impl;
 import com.wk.conv.PacketChannelBuffer;
 import com.wk.conv.config.FieldConfig;
 import com.wk.conv.config.StructConfig;
-import com.wk.conv.mode.PackageMode;
+import com.wk.conv.mode.Modes;
 import com.wk.nio.ChannelBuffer;
 import com.wk.sdo.FieldType;
 import com.wk.sdo.ServiceData;
@@ -15,9 +15,9 @@ import com.wk.sdo.ServiceData;
  */
 public class InbankSrvTranCode implements TranCodeImpl {
 
-	public String getTranCode(ChannelBuffer buffer, PackageMode mode) {
+	public String getTranCode(ChannelBuffer buffer) {
 		ChannelBuffer tran_code_buffer = getTranCodeBuffer(buffer);
-		StructConfig config = getConfig(mode);
+		StructConfig config = getConfig();
 		ServiceData data = new ServiceData();
 		config.getPackageMode().unpack(
 				new PacketChannelBuffer(tran_code_buffer), config, data,
@@ -36,8 +36,8 @@ public class InbankSrvTranCode implements TranCodeImpl {
 		return tran_code_buffer;
 	}
 	
-	private static StructConfig getConfig(PackageMode mode) {
-		 StructConfig config = new StructConfig(null, mode, true);
+	private static StructConfig getConfig() {
+		 StructConfig config = new StructConfig(null, Modes.getPackageMode("outsys_mode"), true);
 		 config.putChild(new FieldConfig("I1TRCD", FieldType.FIELD_STRING, 4));
 		 return config;
 	}

@@ -1,6 +1,5 @@
 package resolver.msg.impl;
 
-import com.wk.conv.mode.PackageMode;
 import com.wk.nio.ChannelBuffer;
 
 /**
@@ -10,5 +9,5 @@ import com.wk.nio.ChannelBuffer;
  */
 public interface TranCodeImpl {
 
-	public String getTranCode(ChannelBuffer buffer, PackageMode mode);
+	public String getTranCode(ChannelBuffer buffer);
 }

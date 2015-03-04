@@ -11,10 +11,10 @@ import resolver.conf.Servers;
 import resolver.conf.TransDistinguishConf;
 import resolver.excption.UnpackRequestException;
 import resolver.excption.UnpackResponseException;
+import resolver.msg.impl.TranCodeImpl;
 
 import com.wk.conv.PacketChannelBuffer;
 import com.wk.conv.config.StructConfig;
-import com.wk.conv.mode.PackageMode;
 import com.wk.eai.config.PackageConfig;
 import com.wk.lang.SystemException;
 import com.wk.logging.Log;
@@ -106,6 +106,7 @@ public class Resolver {
 	public static void unpackRequestMsg(PacketsInfo info, String server) {
 		try {
 			PacketChannelBuffer buffer = new PacketChannelBuffer(info.getPacket());
+			ChannelBuffer tempBuffer = buffer.duplicate();
 			ServiceData data = info.getData();
 			ServiceData tran_data = new ServiceData();
 			//先拆报文头，并识别交易
@@ -113,27 +114,26 @@ public class Resolver {
 			StructConfig reqHeadConfig = headConfig.getRequestConfig();
 			reqHeadConfig.getPackageMode().unpack(buffer, reqHeadConfig, tran_data, buffer.readableBytes());
 			logger.info("拆请求头后,报文:[\n{}\n]", tran_data);
-			
-			String sys_service_code = null;
-			//TODO:如果没有报文头配置,通过配置识别交易码
-			if(tran_data.size() == 0) {
-			
+			//获取交易码
+			String tranCodeExpr = TransDistinguishConf.getTranDistField(server);
+			String sys_service_code = getTranCode(tran_data, tranCodeExpr);
+			if(sys_service_code == null) {
+				sys_service_code = getTranCode(tranCodeExpr, tempBuffer);
+				if(sys_service_code == null) {
+					throw new UnpackRequestException("获取交易码失败,请查看配置是否正确.").addScene("Server", server);
+				}
 			}
+			logger.info("获取交易码：{}", sys_service_code);
 			
 			//if need unpacket body
 			PackageConfig bodyConfig = null;
 			if(buffer.readableBytes() > 0) {
-				//识别交易码
-				sys_service_code = getTranCode(tran_data, TransDistinguishConf.getTranDistField(server));
-				logger.info("获取交易码：{}", sys_service_code);
-				//再拆报文体
 				bodyConfig = Configs.getBodyConfig(server, sys_service_code);
 				StructConfig reqBodyConfig = bodyConfig.getRequestConfig();
 				reqBodyConfig.getPackageMode().unpack(buffer, reqBodyConfig, tran_data, buffer.readableBytes());
 				logger.info("拆请求体后,报文:[\n{}\n]", tran_data);
 			}else {
-				sys_service_code = getTranCode(tran_data, TransDistinguishConf.getTranDistField(server));
-				logger.info("不需要拆请求报文体,从拆得的报文中取得交易码：{}.", sys_service_code);
+				logger.info("不需要拆请求报文体.");
 			}
 			//根据接收系统ip和发送系统ip确定发送渠道名称
 			String send_sys = ChannelDistConf.getChannelName(info
@@ -226,6 +226,21 @@ public class Resolver {
 					data.getServiceData(tranCodeExpr.substring(0, index)),
 					tranCodeExpr.substring(index + 1));
 		}
+	}
+	
+	private static String getTranCode(String clzName, ChannelBuffer buffer) {
+		ChannelBuffer tempBuffer = buffer.duplicate();
+		try {
+			TranCodeImpl c = (TranCodeImpl) Class.forName(clzName).newInstance();
+			return c.getTranCode(tempBuffer);
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }
