@@ -12,7 +12,7 @@ import com.wk.lang.SystemException;
 /**
  * @description 加载渠道映射文件<br/>
  * <pre>保存文件：channels.properties.每行表示一个渠道映射配置。
- * 保存格式为：<strong>src_ip:(port_begin-port_end)+dst_ip:dst_port=渠道名称</strong>
+ * 保存格式为：<strong>src_ip:+dst_ip:dst_port=渠道名称</strong>
  * @author raoliang
  * @version 2015年3月3日 下午5:11:03
  */
