@@ -7,11 +7,13 @@ import java.io.Writer;
 
 import resolver.conf.ChannelDistConf;
 import resolver.conf.Configs;
+import resolver.conf.DecryptServerConf;
 import resolver.conf.Servers;
 import resolver.conf.TransDistinguishConf;
 import resolver.excption.UnpackRequestException;
 import resolver.excption.UnpackResponseException;
 import resolver.msg.impl.TranCodeImpl;
+import resolver.msg.impl.TranDecryptImpl;
 
 import com.wk.conv.PacketChannelBuffer;
 import com.wk.conv.config.StructConfig;
@@ -104,7 +106,13 @@ public class Resolver {
 	
 	public static void unpackRequestMsg(PacketsInfo info, String server) {
 		try {
-			PacketChannelBuffer buffer = new PacketChannelBuffer(info.getPacket());
+			PacketChannelBuffer buffer;
+			String decClz = DecryptServerConf.getRequestDecClz(server);
+			if(decClz != null) {
+				buffer = new PacketChannelBuffer(decryptBuffer(decClz, new PacketChannelBuffer(info.getPacket())));
+			}else {
+				buffer = new PacketChannelBuffer(info.getPacket());
+			}
 			ChannelBuffer tempBuffer = buffer.duplicate();
 			ServiceData data = info.getData();
 			ServiceData tran_data = new ServiceData();
@@ -114,10 +122,10 @@ public class Resolver {
 			reqHeadConfig.getPackageMode().unpack(buffer, reqHeadConfig, tran_data, buffer.readableBytes());
 			logger.info("拆请求头后,报文:[\n{}\n]", tran_data);
 			//获取交易码
-			String tranCodeExpr = TransDistinguishConf.getTranDistField(server);
-			String sys_service_code = getTranCode(tran_data, tranCodeExpr);
+//			String tranCodeExpr = TransDistinguishConf.getTranDistField(server);
+			String sys_service_code = getTranCode(tran_data, server);
 			if(sys_service_code == null) {
-				sys_service_code = getTranCode(tranCodeExpr, tempBuffer);
+				sys_service_code = getTranCode(tempBuffer, server);
 				if(sys_service_code == null) {
 					throw new UnpackRequestException("获取交易码失败,请查看配置是否正确.")
 						.addScene("config_file", "tranDist.properties").addScene("Server", server);
@@ -177,7 +185,13 @@ public class Resolver {
 		ServiceData data = info.getData();
 		ServiceData tran_data = new ServiceData();
 		try {
-			PacketChannelBuffer buffer = new PacketChannelBuffer(info.getPacket());
+			PacketChannelBuffer buffer;
+			String decClz = DecryptServerConf.getResponseDecClz(server);
+			if(decClz != null) {
+				buffer = new PacketChannelBuffer(decryptBuffer(decClz, new PacketChannelBuffer(info.getPacket())));
+			}else {
+				buffer = new PacketChannelBuffer(info.getPacket());
+			}
 			//先拆报文头
 			PackageConfig headConfig = Configs.getHeadConfig(server);
 			StructConfig respHeadConfig = headConfig.getResponseConfig();
@@ -219,7 +233,12 @@ public class Resolver {
 		MsgContainer.removeUnpackedBodyConf(info.getMatch_id());
 	}
 	
-	private static String getTranCode(ServiceData data, String tranCodeExpr) {
+	private static String getTranCode(ServiceData data, String server) {
+		String tranCodeExpr = TransDistinguishConf.getTranDistField(server);
+		return _getTranCode(data, tranCodeExpr);
+	}
+	
+	private static String _getTranCode(ServiceData data, String tranCodeExpr) {
 		int index = tranCodeExpr.indexOf(">");
 		if(index < 0) {
 			return data.getString(tranCodeExpr);
@@ -230,11 +249,32 @@ public class Resolver {
 		}
 	}
 	
-	private static String getTranCode(String clzName, ChannelBuffer buffer) {
+	private static String getTranCode(ChannelBuffer buffer, String server) {
+		String tranCodeExpr = TransDistinguishConf.getTranDistField(server);
+		return _getTranCode(buffer, tranCodeExpr);
+		
+	}
+	
+	private static String _getTranCode(ChannelBuffer buffer, String clzName) {
 		ChannelBuffer tempBuffer = buffer.duplicate();
 		try {
 			TranCodeImpl c = (TranCodeImpl) Class.forName(clzName).newInstance();
 			return c.getTranCode(tempBuffer);
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private static ChannelBuffer decryptBuffer(String clzName, ChannelBuffer buffer) {
+		ChannelBuffer tempBuffer = buffer.duplicate();
+		try {
+			TranDecryptImpl c = (TranDecryptImpl) Class.forName(clzName).newInstance();
+			return c.decrypt(tempBuffer);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {

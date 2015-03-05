@@ -4,13 +4,16 @@ import java.util.HashMap;
 
 import com.wk.eai.config.PackageConfig;
 import com.wk.lang.SystemException;
+import com.wk.logging.Log;
+import com.wk.logging.LogFactory;
 
 /**
  * @description 报文配置容器
  * @author raoliang
  * @version 2015年2月9日 下午3:40:59
  */
-public class Configs extends Loader{
+public class Configs {
+	public static final Log logger = LogFactory.getLog();
 
 	private static final HashMap<String, PackageConfig> headConfigs = new HashMap<String, PackageConfig>();
 	private static final HashMap<String, PackageConfig> bodyConfigs = new HashMap<String, PackageConfig>();

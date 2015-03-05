@@ -10,7 +10,7 @@ import java.util.HashMap;
 import com.wk.lang.SystemException;
 
 /**
- * @description 加载渠道映射文件<br/>
+ * @description 加载渠道识别配置<br/>
  * <pre>保存文件：channels.properties.每行表示一个渠道映射配置。
  * 保存格式为：<strong>src_ip:+dst_ip:dst_port=渠道名称</strong>
  * @author raoliang
@@ -18,16 +18,15 @@ import com.wk.lang.SystemException;
  */
 public class ChannelDistConf extends Loader {
 	private static HashMap<String, String> channels = new HashMap<String, String>();
-	private static final String channelsFilePath = basePath + "channels.properties";
+	private static final String channelsFileName = "channels.properties"; 
 	
 	public static void main(String[] args) {
-		loadChannelDistConf();
+		load();
 		System.out.println(channels.get("123.123.123.86+127.0.0.1:8883"));
-		
 	}
 	
-	public static void loadChannelDistConf() {
-		File confFile = getFile(channelsFilePath);
+	public static void load() {
+		File confFile = getFile(channelsFileName);
 		try {
 			InputStreamReader reader = new InputStreamReader(new FileInputStream(confFile));
 			BufferedReader in = new BufferedReader(reader);
@@ -61,7 +60,7 @@ public class ChannelDistConf extends Loader {
 		if(ips.length() == 0 || channel.length() == 0) {
 			throw new SystemException(
 					"SYS_RESOLVER_TRANDIST_MAPPING_CONFIG_CONTENT_ERROR")
-					.addScene("filePath", channelsFilePath)
+					.addScene("filePath", channelsFileName)
 					.addScene("line", line);
 		}
 		channels.put(ips, channel);

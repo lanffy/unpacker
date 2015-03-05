@@ -23,10 +23,10 @@ public class Loader {
 	
 	protected static final String basePath = "/resolverConf/";
 	
-	protected static List<File> getFileList(String filePath) {
-		URL url = ModeLoader.class.getResource(filePath);
+	protected static List<File> getFileList(String folderPath) {
+		URL url = ModeLoader.class.getResource(basePath + folderPath);
 		if(url == null) {
-			logger.warn("文件夹不存在：{}", filePath);
+			logger.warn("文件夹不存在：{}", folderPath);
 			return null;
 		}
 		List<File> fileList = FileUtil.listAllFiles(new File(url.getFile()));
@@ -34,9 +34,9 @@ public class Loader {
 	}
 	
 	protected static File getFile(String filePaht) {
-		URL url = Servers.class.getResource(filePaht);
+		URL url = Servers.class.getResource(basePath + filePaht);
 		if(url == null) {
-			throw new SystemException("Configing File Is Not Exist").addScene("FilePath", filePaht);
+			throw new SystemException("Config File Is Not Exist").addScene("FilePath", filePaht);
 		}
 		return new File(url.getFile());
 	}

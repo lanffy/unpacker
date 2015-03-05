@@ -19,7 +19,7 @@ import com.wk.lang.SystemException;
 public class Servers extends Loader{
 
 	private static HashMap<String, String> Servers = new HashMap<String, String>();
-	private static final String serverFilePath = basePath + "server.properties";
+	private static final String serverFileName = "server.properties";
 	
 	public static void main(String[] args) {
 		loadServer();
@@ -30,7 +30,7 @@ public class Servers extends Loader{
 	}
 	
 	public static void loadServer() {
-		File serverFile = getFile(serverFilePath);
+		File serverFile = getFile(serverFileName);
 		try {
 			InputStreamReader reader = new InputStreamReader(new FileInputStream(serverFile));
 			BufferedReader in = new BufferedReader(reader);
@@ -56,7 +56,7 @@ public class Servers extends Loader{
 		if(line.indexOf("=") < 0) {
 			throw new SystemException(
 					"SYS_RESOLVER_SERVER_MAPPING_CONFIG_FORMAT_ERROR")
-					.addScene("filePath", serverFilePath)
+					.addScene("filePath", serverFileName)
 					.addScene("line", line);
 		}
 		String[] servers = line.split("=");
@@ -65,7 +65,7 @@ public class Servers extends Loader{
 		if(ip_prot.length() == 0 || server.length() == 0) {
 			throw new SystemException(
 					"SYS_RESOLVER_SERVER_MAPPING_CONFIG_CONTENT_ERROR")
-					.addScene("filePath", serverFilePath)
+					.addScene("filePath", serverFileName)
 					.addScene("line", line);
 		}
 		Servers.put(ip_prot, server);

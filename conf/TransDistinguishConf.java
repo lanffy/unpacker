@@ -26,7 +26,7 @@ import com.wk.lang.SystemException;
  */
 public class TransDistinguishConf extends Loader{
 	private static HashMap<String, String> trans = new HashMap<String, String>();
-	private static final String transConfFilePath = basePath + "tranDist.properties";
+	private static final String transConfFileName = "tranDist.properties";
 	
 	public static void main(String[] args) {
 		loadTransDistConf();
@@ -38,7 +38,7 @@ public class TransDistinguishConf extends Loader{
 	}
 	
 	public static void loadTransDistConf() {
-		File confFile = getFile(transConfFilePath);
+		File confFile = getFile(transConfFileName);
 		try {
 			InputStreamReader reader = new InputStreamReader(new FileInputStream(confFile));
 			BufferedReader in = new BufferedReader(reader);
@@ -67,7 +67,7 @@ public class TransDistinguishConf extends Loader{
 		if(service.length() == 0 || tran_field.length() == 0) {
 			throw new SystemException(
 					"SYS_RESOLVER_TRANDIST_MAPPING_CONFIG_CONTENT_ERROR")
-					.addScene("filePath", transConfFilePath)
+					.addScene("filePath", transConfFileName)
 					.addScene("line", line);
 		}
 		trans.put(service, tran_field);

@@ -26,7 +26,7 @@ import com.wk.util.ClassUtil;
  */
 public class ModeLoader extends Loader{
 	
-	private static final String modeBasePath = basePath + "Mode/";
+	private static final String modeBasePath = "Mode/";
 	
 	private static final String modeFilePath = config.getProperty("resolver.modeFilePath", modeBasePath);
 	
