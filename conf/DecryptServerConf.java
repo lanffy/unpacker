@@ -42,7 +42,6 @@ public class DecryptServerConf extends Loader{
 	
 	private static void loadConf() {
 		File file = getFile(decServerConfFileName);
-		System.out.println(file.exists());
 		try {
 			prop.load(new FileInputStream(file));
 		} catch (Exception e) {
@@ -52,12 +51,12 @@ public class DecryptServerConf extends Loader{
 		String[] requests = prop.getProperty("request").split(",");
 		String[] responses = prop.getProperty("response").split(",");
 		
-		loadConf(requests, requestMap);
-		loadConf(responses, responseMap);
+		loadConf(requests, requestMap, "Request");
+		loadConf(responses, responseMap, "Response");
 		logger.info("Load Decrypt Server Config End ==========================");
 	}
 	
-	private static void loadConf(String[] configs, HashMap<String, String> map) {
+	private static void loadConf(String[] configs, HashMap<String, String> map, String flag) {
 		String value;
 		for(String key : configs) {
 			value = prop.getProperty(key);
@@ -65,7 +64,7 @@ public class DecryptServerConf extends Loader{
 				throw new SystemException("Decrypt Server Should Not Null").addScene("ServerName", key);
 			}else {
 				map.put(key, value);
-				logger.info("Load Decrypt Server Config£º[{}] -> [{}]", key, value);
+				logger.info("Load Server {} Decrypt Config£º[{}] -> [{}]", flag, key, value);
 			}
 		}
 	}

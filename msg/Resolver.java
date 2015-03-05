@@ -44,7 +44,7 @@ public class Resolver {
 			logger.info("返回异常响应报文");
 			return ResponseMsg.packRepMsg(responseInfo);
 		}
-		logger.info("收到来自ip:[{}]的报文，发往服务系统:[{} -> {}]", info.getSrc_ip(), server, ip_server);
+		logger.info("收到来自ip:[{}]的报文，发往服务系统:[{} -> {}]", info.getSrc_ip(), ip_server, server);
 		String ret_code = "0";
 		String ret_msg = "拆包成功";
 		String loggermsg = "返回正常报文";
@@ -110,6 +110,7 @@ public class Resolver {
 			String decClz = DecryptServerConf.getRequestDecClz(server);
 			if(decClz != null) {
 				buffer = new PacketChannelBuffer(decryptBuffer(decClz, new PacketChannelBuffer(info.getPacket())));
+				logger.info("解密请求报文,解密后报文:\n{}", buffer.toHexString());
 			}else {
 				buffer = new PacketChannelBuffer(info.getPacket());
 			}
@@ -189,6 +190,7 @@ public class Resolver {
 			String decClz = DecryptServerConf.getResponseDecClz(server);
 			if(decClz != null) {
 				buffer = new PacketChannelBuffer(decryptBuffer(decClz, new PacketChannelBuffer(info.getPacket())));
+				logger.info("解密响应报文,解密后报文:\n{}", buffer.toHexString());
 			}else {
 				buffer = new PacketChannelBuffer(info.getPacket());
 			}

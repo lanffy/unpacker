@@ -2,6 +2,7 @@ package resolver;
 
 import resolver.conf.ChannelDistConf;
 import resolver.conf.ConfigLoader;
+import resolver.conf.DecryptServerConf;
 import resolver.conf.ModeLoader;
 import resolver.conf.Servers;
 import resolver.conf.TransDistinguishConf;
@@ -33,10 +34,11 @@ public class Receiver {
 	public static void main(String[] args) throws Exception {
 		logger.info("begin start...");
 		ChannelDistConf.load();
-		Servers.loadServer();
-		TransDistinguishConf.loadTransDistConf();
-		ModeLoader.loadMode();
-		ConfigLoader.loadConf();
+		Servers.load();
+		TransDistinguishConf.load();
+		DecryptServerConf.load();
+		ModeLoader.load();
+		ConfigLoader.load();
 		new Receiver();
 		logger.info("listening...");
 		System.out.println("listening");

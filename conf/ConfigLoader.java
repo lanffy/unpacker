@@ -39,12 +39,12 @@ public class ConfigLoader extends Loader{
 	private static final String tranConfPath = config.getProperty("resolver.serverTranServicePath", baseTranConfPath);
 	
 	public static void main(String[] args) {
-		ModeLoader.loadMode();
-		loadConf();
+		ModeLoader.load();
+		load();
 		System.out.println("done");
 	}
 	
-	public static void loadConf() {
+	public static void load() {
 		loadServer();
 		loadTranConf();
 	}

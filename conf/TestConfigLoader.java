@@ -11,8 +11,8 @@ public class TestConfigLoader extends TestCase {
 
 	@Override
 	protected void setUpOnce() throws java.lang.Exception {
-		ModeLoader.loadMode();
-		ConfigLoader.loadConf();
+		ModeLoader.load();
+		ConfigLoader.load();
 		System.out.println("loader done");
 	}
 

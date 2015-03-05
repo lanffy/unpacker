@@ -12,7 +12,7 @@ import com.wk.nio.ChannelBuffer;
  */
 public class TestTranCode {
 	public static void main(String[] args) {
-		ModeLoader.loadMode();
+		ModeLoader.load();
 		String classNameStr = "resolver.msg.impl.InbankSrvTranCode";
 		try {
 			TranCodeImpl c = (TranCodeImpl) Class.forName(classNameStr).newInstance();

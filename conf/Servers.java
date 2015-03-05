@@ -22,14 +22,14 @@ public class Servers extends Loader{
 	private static final String serverFileName = "server.properties";
 	
 	public static void main(String[] args) {
-		loadServer();
+		load();
 		System.out.println(getServerByIp("127.0.0.1:8881"));
 		System.out.println(getServerByIp("127.0.0.1:8882"));
 		System.out.println(getServerByIp("127.0.0.1:8883"));
 		System.out.println(getServerByIp("127.0.0.1:8884"));
 	}
 	
-	public static void loadServer() {
+	public static void load() {
 		File serverFile = getFile(serverFileName);
 		try {
 			InputStreamReader reader = new InputStreamReader(new FileInputStream(serverFile));

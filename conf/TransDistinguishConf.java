@@ -29,7 +29,7 @@ public class TransDistinguishConf extends Loader{
 	private static final String transConfFileName = "tranDist.properties";
 	
 	public static void main(String[] args) {
-		loadTransDistConf();
+		load();
 		System.out.println(getTranDistField("outsys"));
 		System.out.println(getTranDistField("hxzh-nb"));
 		System.out.println(getTranDistField("hxzh-tb"));
@@ -37,7 +37,7 @@ public class TransDistinguishConf extends Loader{
 		System.out.println(getTranDistField("unitepaySystem"));
 	}
 	
-	public static void loadTransDistConf() {
+	public static void load() {
 		File confFile = getFile(transConfFileName);
 		try {
 			InputStreamReader reader = new InputStreamReader(new FileInputStream(confFile));

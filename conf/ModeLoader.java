@@ -31,7 +31,7 @@ public class ModeLoader extends Loader{
 	private static final String modeFilePath = config.getProperty("resolver.modeFilePath", modeBasePath);
 	
 	public static void main(String[] args) {
-		loadMode();
+		load();
 //		DefaultPackageMode mode = (DefaultPackageMode) Modes.getPackageMode("outsys_mode");
 //		DefaultPackageMode mode = (DefaultPackageMode) Modes.getPackageMode("standard");
 //		FieldProcessMode mode = Modes.getFieldProcessMode("ftp-download");
@@ -39,7 +39,7 @@ public class ModeLoader extends Loader{
 		System.out.println(Modes.getPackageMode("outsys_mode").getName());
 	}
 	
-	public static void loadMode() {
+	public static void load() {
 		List<File> fileList = getFileList(modeFilePath);
 		for(File file : fileList) {
 			ServiceData data = JSONFileUtil.loadJsonFileToServiceData(file);
