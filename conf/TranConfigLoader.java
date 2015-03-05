@@ -30,7 +30,7 @@ import com.wk.util.StringUtil;
  * @author raoliang
  * @version 2015年2月4日 下午4:06:26
  */
-public class ConfigLoader extends Loader{
+public class TranConfigLoader extends Loader{
 	
 	private static final String baseServerPath = "Server/";
 	private static final String baseTranConfPath = "ServerTranService/";
@@ -59,7 +59,7 @@ public class ConfigLoader extends Loader{
 			StructConfig resp_conf = json2IOConfig(serverInfo.getResp_Package_Conf());
 			StructConfig err_conf = json2IOConfig(serverInfo.getErr_Package_Conf());
 			final PackageConfig head_config = new PackageConfig(req_conf, resp_conf, err_conf); 
-			Configs.putHeadConfig(serverCode, head_config);
+			TransConfigs.putHeadConfig(serverCode, head_config);
 			logger.info("Load Server Head Config：[ {} ]", serverCode);
 		}
 		logger.info("Load Server Head Config End ==========================");
@@ -75,7 +75,7 @@ public class ConfigLoader extends Loader{
 			StructConfig req_conf = json2IOConfig(tranInfo.getReq_Conf());
 			StructConfig resp_conf = json2IOConfig(tranInfo.getResp_Conf());
 			final PackageConfig body_config = new PackageConfig(req_conf, resp_conf);
-			Configs.putBodyConfig(serverCode, tranCode, body_config);
+			TransConfigs.putBodyConfig(serverCode, tranCode, body_config);
 			logger.info("Load Server Tran Service Body Config, Server -> [ {} ], ServiceCode -> [ {} ]", serverCode, tranCode);
 		}
 		logger.info("Load Server Tran Service Body Config End ==========================");

@@ -2,9 +2,9 @@ package resolver.conf;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.wk.lang.SystemException;
 
@@ -16,8 +16,8 @@ import com.wk.lang.SystemException;
 public class DecryptServerConf extends Loader{
 	private static final String decServerConfFileName = "decrypt.properties";
 	
-	private static final HashMap<String, String> requestMap = new HashMap<String, String>();
-	private static final HashMap<String, String> responseMap = new HashMap<String, String>();
+	private static final ConcurrentHashMap<String, String> requestMap = new ConcurrentHashMap<String, String>();
+	private static final ConcurrentHashMap<String, String> responseMap = new ConcurrentHashMap<String, String>();
 	
 	private static final Properties prop = new Properties();
 	
@@ -56,7 +56,7 @@ public class DecryptServerConf extends Loader{
 		logger.info("Load Decrypt Server Config End ==========================");
 	}
 	
-	private static void loadConf(String[] configs, HashMap<String, String> map, String flag) {
+	private static void loadConf(String[] configs, ConcurrentHashMap<String, String> map, String flag) {
 		String value;
 		for(String key : configs) {
 			value = prop.getProperty(key);

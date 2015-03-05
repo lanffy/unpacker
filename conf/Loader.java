@@ -1,8 +1,12 @@
 package resolver.conf;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.wk.SystemConfig;
 import com.wk.lang.SystemException;
@@ -39,5 +43,22 @@ public class Loader {
 			throw new SystemException("Config File Is Not Exist").addScene("FilePath", filePaht);
 		}
 		return new File(url.getFile());
+	}
+	
+	public static void _load(String fileName, ConcurrentHashMap<String, String> map, String logMark) {
+		File confFile = getFile(fileName);
+		try {
+			Properties prop = new Properties();
+			prop.load(new FileInputStream(confFile));
+			String value = "";
+			for(Object key : prop.keySet()) {
+				value = prop.getProperty((String)key);
+				map.put((String)key, value);
+				logger.info("Load {} Config£º[{}] -> {}",logMark, (String)key, value);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		logger.info("Load {} Config End ==========================", logMark);
 	}
 }

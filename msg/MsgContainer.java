@@ -1,6 +1,6 @@
 package resolver.msg;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.wk.eai.config.PackageConfig;
 
@@ -13,16 +13,16 @@ public class MsgContainer {
 	/**
 	 * 保存先于请求收到的响应报文,key:match_id,value:响应报文
 	 */
-	private static final HashMap<String, PacketsInfo> respMsgs = new HashMap<String, PacketsInfo>();
+	private static final ConcurrentHashMap<String, PacketsInfo> respMsgs = new ConcurrentHashMap<String, PacketsInfo>();
 	/**
 	 * 保存已经解析过的请求报文,key:match_id,value:服务系统serverCode
 	 */
-	private static final HashMap<String, String> unpackedConf = new HashMap<String, String>();
+	private static final ConcurrentHashMap<String, String> unpackedConf = new ConcurrentHashMap<String, String>();
 	
 	/**
 	 * 保存已经解析过的请求报文的报文体配置，包括请求和响应
 	 */
-	private static final HashMap<String, PackageConfig> bodyConfigs = new HashMap<String, PackageConfig>();
+	private static final ConcurrentHashMap<String, PackageConfig> bodyConfigs = new ConcurrentHashMap<String, PackageConfig>();
 	
 	/**
 	* @description 保存先于请求收到的响应报文,key:match_id,value:响应报文

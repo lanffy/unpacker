@@ -12,15 +12,15 @@ public class TestConfigLoader extends TestCase {
 	@Override
 	protected void setUpOnce() throws java.lang.Exception {
 		ModeLoader.load();
-		ConfigLoader.load();
+		TranConfigLoader.load();
 		System.out.println("loader done");
 	}
 
 	public void test_headConfigLoad() {
-		assertTrue(Configs.getHeadConfigMap().containsKey("inbankSRV"));
+		assertTrue(TransConfigs.getHeadConfigMap().containsKey("inbankSRV"));
 	}
 
 	public void test_bodyConfigLoad() {
-		assertTrue(Configs.getBodyConfigMap().containsKey("inbankSRV_8813"));
+		assertTrue(TransConfigs.getBodyConfigMap().containsKey("inbankSRV_8813"));
 	}
 }

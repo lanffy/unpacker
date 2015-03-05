@@ -1,13 +1,6 @@
 package resolver.conf;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-
-import com.wk.lang.SystemException;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @description 加载各个服务系统报文头中表示交易码的字段<br/>
@@ -25,7 +18,7 @@ import com.wk.lang.SystemException;
  * @version 2015年2月27日 下午2:01:08
  */
 public class TransDistinguishConf extends Loader{
-	private static HashMap<String, String> trans = new HashMap<String, String>();
+	private static final ConcurrentHashMap<String, String> trans = new ConcurrentHashMap<String, String>();
 	private static final String transConfFileName = "tranDist.properties";
 	
 	public static void main(String[] args) {
@@ -38,39 +31,11 @@ public class TransDistinguishConf extends Loader{
 	}
 	
 	public static void load() {
-		File confFile = getFile(transConfFileName);
-		try {
-			InputStreamReader reader = new InputStreamReader(new FileInputStream(confFile));
-			BufferedReader in = new BufferedReader(reader);
-			String line = "";
-			while((line=in.readLine()) != null) {
-				if(line.trim().length() == 0 || line.startsWith("#") || !line.contains("="))
-					continue;
-				putConf(line);
-			}
-			in.close();
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		logger.info("Load Transaction Distinguish Config End ==========================");
+		_load(transConfFileName, trans, "Transaction Distinguish");
 	}
 	
 	public static String getTranDistField(String serviceName) {
 		return trans.get(serviceName);
 	}
 	
-	private static void putConf(String line) {
-		String[] confs = line.split("=");
-		String service = confs[0].trim();
-		String tran_field = confs[1].trim();
-		if(service.length() == 0 || tran_field.length() == 0) {
-			throw new SystemException(
-					"SYS_RESOLVER_TRANDIST_MAPPING_CONFIG_CONTENT_ERROR")
-					.addScene("filePath", transConfFileName)
-					.addScene("line", line);
-		}
-		trans.put(service, tran_field);
-		logger.info("Load Transaction Distinguish Config：{} -> [{}]", service, tran_field);
-	}
 }

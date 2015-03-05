@@ -1,7 +1,7 @@
 package resolver;
 
 import resolver.conf.ChannelDistConf;
-import resolver.conf.ConfigLoader;
+import resolver.conf.TranConfigLoader;
 import resolver.conf.DecryptServerConf;
 import resolver.conf.ModeLoader;
 import resolver.conf.Servers;
@@ -38,7 +38,7 @@ public class Receiver {
 		TransDistinguishConf.load();
 		DecryptServerConf.load();
 		ModeLoader.load();
-		ConfigLoader.load();
+		TranConfigLoader.load();
 		new Receiver();
 		logger.info("listening...");
 		System.out.println("listening");
@@ -72,7 +72,7 @@ class ReqActor<T extends ChannelBufferMsg> extends Actor<Request<T>> {
 		
 		PacketsInfo info = new PacketsInfo(data);
 		responseInfo.setMsg_id(info.getMsg_id());
-		ChannelBuffer responseBuffer = Resolver.unpackeTranBuffer(info, responseInfo);
+		ChannelBuffer responseBuffer = new Resolver().unpackeTranBuffer(info, responseInfo);
 		ChannelBufferMsg respMsg = new ChannelBufferMsg(responseBuffer);
 		Receiver.logger.info("返回响应报文Hex: \n{}", responseBuffer.toHexString());
 		request.doResponse((T)respMsg);

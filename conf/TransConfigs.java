@@ -1,6 +1,6 @@
 package resolver.conf;
 
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.wk.eai.config.PackageConfig;
 import com.wk.lang.SystemException;
@@ -12,11 +12,11 @@ import com.wk.logging.LogFactory;
  * @author raoliang
  * @version 2015年2月9日 下午3:40:59
  */
-public class Configs {
+public class TransConfigs {
 	public static final Log logger = LogFactory.getLog();
 
-	private static final HashMap<String, PackageConfig> headConfigs = new HashMap<String, PackageConfig>();
-	private static final HashMap<String, PackageConfig> bodyConfigs = new HashMap<String, PackageConfig>();
+	private static final ConcurrentHashMap<String, PackageConfig> headConfigs = new ConcurrentHashMap<String, PackageConfig>();
+	private static final ConcurrentHashMap<String, PackageConfig> bodyConfigs = new ConcurrentHashMap<String, PackageConfig>();
 	
 	/**
 	* @description 保存报文头配置
@@ -54,11 +54,11 @@ public class Configs {
 			.addScene("tranCode", tranCode);
 	}
 	
-	public static HashMap<String, PackageConfig> getHeadConfigMap() {
+	public static ConcurrentHashMap<String, PackageConfig> getHeadConfigMap() {
 		return headConfigs;
 	}
 	
-	public static HashMap<String, PackageConfig> getBodyConfigMap() {
+	public static ConcurrentHashMap<String, PackageConfig> getBodyConfigMap() {
 		return bodyConfigs;
 	}
 }

@@ -6,7 +6,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import resolver.conf.ChannelDistConf;
-import resolver.conf.Configs;
+import resolver.conf.TransConfigs;
 import resolver.conf.DecryptServerConf;
 import resolver.conf.Servers;
 import resolver.conf.TransDistinguishConf;
@@ -30,11 +30,11 @@ import com.wk.sdo.ServiceData;
  * @version 2015年2月10日 下午3:55:09
  */
 public class Resolver {
-	private static final Log logger = LogFactory.getLog();
-	private static final SendClient client = new SendClient();
+	private final Log logger = LogFactory.getLog();
+	private final SendClient client = new SendClient();
 	
-	public static ChannelBuffer unpackeTranBuffer(PacketsInfo info, ResponseInfo responseInfo) {
-		String ip_server = info.getDst_ip() + ":" + info.getDst_prot();
+	public ChannelBuffer unpackeTranBuffer(PacketsInfo info, ResponseInfo responseInfo) {
+		String ip_server = info.getDst_ip() + "+" + info.getDst_prot();
 		String server = Servers.getServerByIp(ip_server);
 		if(server == null) {
 			logger.warn("目的服务系统IP映射不存在，请查看配置文件server.properties中是否配置[{}]的值!",
@@ -104,7 +104,7 @@ public class Resolver {
 		return ResponseMsg.packRepMsg(responseInfo);
 	}
 	
-	public static void unpackRequestMsg(PacketsInfo info, String server) {
+	public void unpackRequestMsg(PacketsInfo info, String server) {
 		try {
 			PacketChannelBuffer buffer;
 			String decClz = DecryptServerConf.getRequestDecClz(server);
@@ -118,7 +118,7 @@ public class Resolver {
 			ServiceData data = info.getData();
 			ServiceData tran_data = new ServiceData();
 			//先拆报文头，并识别交易
-			PackageConfig headConfig = Configs.getHeadConfig(server);
+			PackageConfig headConfig = TransConfigs.getHeadConfig(server);
 			StructConfig reqHeadConfig = headConfig.getRequestConfig();
 			reqHeadConfig.getPackageMode().unpack(buffer, reqHeadConfig, tran_data, buffer.readableBytes());
 			logger.info("拆请求头后,报文:[\n{}\n]", tran_data);
@@ -137,7 +137,7 @@ public class Resolver {
 			//if need unpacket body
 			PackageConfig bodyConfig = null;
 			if(buffer.readableBytes() > 0) {
-				bodyConfig = Configs.getBodyConfig(server, sys_service_code);
+				bodyConfig = TransConfigs.getBodyConfig(server, sys_service_code);
 				StructConfig reqBodyConfig = bodyConfig.getRequestConfig();
 				reqBodyConfig.getPackageMode().unpack(buffer, reqBodyConfig, tran_data, buffer.readableBytes());
 				logger.info("拆请求体后,报文:[\n{}\n]", tran_data);
@@ -146,7 +146,7 @@ public class Resolver {
 			}
 			//根据接收系统ip和发送系统ip确定发送渠道名称
 			String send_sys_expr = info.getSrc_ip() + "+" + info.getDst_ip()
-					+ ":" + info.getDst_prot();
+					+ "+" + info.getDst_prot();
 			String send_sys = ChannelDistConf.getChannelName(send_sys_expr);
 			if(send_sys == null) {
 				logger.error("识别发送渠道失败,请查看配置文件channels.properites文件中是否配置[{}]的值.", send_sys_expr);
@@ -182,7 +182,7 @@ public class Resolver {
 		}
 	}
 	
-	public static void unpackResponseMsg(PacketsInfo info, String server) {
+	public void unpackResponseMsg(PacketsInfo info, String server) {
 		ServiceData data = info.getData();
 		ServiceData tran_data = new ServiceData();
 		try {
@@ -195,7 +195,7 @@ public class Resolver {
 				buffer = new PacketChannelBuffer(info.getPacket());
 			}
 			//先拆报文头
-			PackageConfig headConfig = Configs.getHeadConfig(server);
+			PackageConfig headConfig = TransConfigs.getHeadConfig(server);
 			StructConfig respHeadConfig = headConfig.getResponseConfig();
 			respHeadConfig.getPackageMode().unpack(buffer, respHeadConfig, tran_data, buffer.readableBytes());
 			logger.info("拆响应头后,报文:[\n{}\n]", tran_data);
@@ -229,18 +229,18 @@ public class Resolver {
 		removeInfo(info);
 	}
 	
-	private static void removeInfo(PacketsInfo info) {
+	private void removeInfo(PacketsInfo info) {
 		MsgContainer.removeResponseMsg(info.getMatch_id());
 		MsgContainer.removeUnpackedConf(info.getMatch_id());
 		MsgContainer.removeUnpackedBodyConf(info.getMatch_id());
 	}
 	
-	private static String getTranCode(ServiceData data, String server) {
+	private String getTranCode(ServiceData data, String server) {
 		String tranCodeExpr = TransDistinguishConf.getTranDistField(server);
 		return _getTranCode(data, tranCodeExpr);
 	}
 	
-	private static String _getTranCode(ServiceData data, String tranCodeExpr) {
+	private String _getTranCode(ServiceData data, String tranCodeExpr) {
 		int index = tranCodeExpr.indexOf(">");
 		if(index < 0) {
 			return data.getString(tranCodeExpr);
@@ -251,13 +251,13 @@ public class Resolver {
 		}
 	}
 	
-	private static String getTranCode(ChannelBuffer buffer, String server) {
+	private String getTranCode(ChannelBuffer buffer, String server) {
 		String tranCodeExpr = TransDistinguishConf.getTranDistField(server);
 		return _getTranCode(buffer, tranCodeExpr);
 		
 	}
 	
-	private static String _getTranCode(ChannelBuffer buffer, String clzName) {
+	private String _getTranCode(ChannelBuffer buffer, String clzName) {
 		ChannelBuffer tempBuffer = buffer.duplicate();
 		try {
 			TranCodeImpl c = (TranCodeImpl) Class.forName(clzName).newInstance();
@@ -272,7 +272,7 @@ public class Resolver {
 		return null;
 	}
 	
-	private static ChannelBuffer decryptBuffer(String clzName, ChannelBuffer buffer) {
+	private ChannelBuffer decryptBuffer(String clzName, ChannelBuffer buffer) {
 		ChannelBuffer tempBuffer = buffer.duplicate();
 		try {
 			TranDecryptImpl c = (TranDecryptImpl) Class.forName(clzName).newInstance();
