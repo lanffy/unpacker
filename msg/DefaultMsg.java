@@ -1,5 +1,7 @@
 package resolver.msg;
 
+import resolver.util.BufferReader;
+
 import com.wk.conv.PacketChannelBuffer;
 import com.wk.conv.config.StructConfig;
 import com.wk.conv.mode.VRouterPackageMode;
@@ -28,11 +30,10 @@ public class DefaultMsg{
 	}
 	
 	public static void main(String[] args) {
+		ChannelBuffer buffer = BufferReader.createRequestMsg("response");
+		StructConfig config = new StructConfig(com.wk.conv.mode.Modes.getPackageMode("vrouterserver"), false);
 		ServiceData data = new ServiceData();
-		data.putString("key", "value");
-		ChannelBuffer buffer = pack(data);
-		System.out.println(buffer.toHexString());
-		ServiceData data2 = unpack(new PacketChannelBuffer(buffer));
-		System.out.println(data2);
+		config.getPackageMode().unpack(new PacketChannelBuffer(buffer), config, data, buffer.readableBytes());
+		System.out.println("done");
 	}
 }
