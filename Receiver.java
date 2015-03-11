@@ -76,9 +76,8 @@ class ReqActor<T extends ChannelBufferMsg> extends Actor<Request<T>> {
 		PacketsInfo info = new PacketsInfo(data);
 		request.doResponse((T) packetResp(info.getMsg_id(), responseInfo));
 		// resolve packet
-		ChannelBuffer responseBuffer = new Resolver().unpackeTranBuffer(info,
+		new Resolver().unpackeTranBuffer(info,
 				responseInfo);
-		Receiver.logger.info("旁路解析结果Hex: \n{}", responseBuffer.toHexString());
 	}
 	
 	private ChannelBufferMsg packetResp(int msg_id, ResponseInfo responseInfo) {

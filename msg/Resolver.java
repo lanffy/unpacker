@@ -34,30 +34,33 @@ public class Resolver {
 	private final SendClient client = new SendClient();
 	
 	public ChannelBuffer unpackeTranBuffer(PacketsInfo info, ResponseInfo responseInfo) {
-		String ip_server = info.getDst_ip() + "+" + info.getDst_prot();
-		String server = Servers.getServerByIp(ip_server);
-		if(server == null) {
-			logger.warn("目的服务系统IP映射不存在，请查看配置文件server.properties中是否配置[{}]的值!",
-					ip_server);
-			responseInfo.setRet_code("1");
-			responseInfo.setRet_msg("目的服务系统IP映射不存在，请查看配置文件server.properties中是否配置[" + ip_server+ "]的值!");
-			logger.info("返回异常响应报文");
-			return ResponseMsg.packRepMsg(responseInfo);
-		}
-		logger.info("收到来自ip:[{}]的报文，发往服务系统:[{} -> {}]", info.getSrc_ip(), ip_server, server);
 		String ret_code = "0";
 		String ret_msg = "拆包成功";
 		String loggermsg = "返回正常报文";
 		Writer writer = new StringWriter();
 		int typeFlag = info.getPacket_type();
+		String ip, server = "";
 		try {
 			if(typeFlag == 1) {
 				logger.info("报文类型：[{}]", "request");
+				ip = info.getDst_ip() + "+" + info.getDst_prot();
+				server = Servers.getServerByIp(ip);
+				if(server == null) {
+					return packetRes(responseInfo, ip);
+				}
+				logger.info("收到来自ip:[{}]的报文，发往服务系统:[{} -> {}]", info.getSrc_ip(), ip, server);
 				unpackRequestMsg(info, server);
 				ret_msg = "拆请求报文成功";
 			}else if(typeFlag == 2){
 				logger.info("报文类型：[{}]", "response");
-				String key = info.getDst_ip() + "+" + info.getDst_prot() + 
+				//根据接收系统ip和发送系统ip确定接收渠道名称
+				ip = info.getSrc_ip() + "+" + info.getSrc_port();
+				server = Servers.getServerByIp(ip);
+				if(server == null) {
+					return packetRes(responseInfo, ip);
+				}
+				logger.info("收到来自ip:[{}]的报文，发往渠道系统:[{} -> {}]", info.getSrc_ip(), info.getDst_ip(), server);
+				String key = info.getDst_ip() + "+" + info.getDst_prot() + "+" + 
 						info.getSrc_ip() + "+" + info.getSrc_port();
 				String unpackedServer = MsgContainer.getUnpackedServerCode(key);
 				if(unpackedServer != null) {
@@ -191,7 +194,7 @@ public class Resolver {
 	public void unpackResponseMsg(PacketsInfo info, String server) {
 		ServiceData data = info.getData();
 		ServiceData tran_data = new ServiceData();
-		String key = info.getDst_ip() + "+" + info.getDst_prot() + 
+		String key = info.getDst_ip() + "+" + info.getDst_prot() + "+" + 
 				info.getSrc_ip() + "+" + info.getSrc_port();
 		try {
 			PacketChannelBuffer buffer;
@@ -238,7 +241,7 @@ public class Resolver {
 	}
 	
 	private void removeInfo(PacketsInfo info) {
-		String key = info.getDst_ip() + "+" + info.getDst_prot() + 
+		String key = info.getDst_ip() + "+" + info.getDst_prot() + "+" + 
 				info.getSrc_ip() + "+" + info.getSrc_port();
 		MsgContainer.removeResponseMsg(key);
 		MsgContainer.removeUnpackedConf(key);
@@ -272,11 +275,7 @@ public class Resolver {
 		try {
 			TranCodeImpl c = (TranCodeImpl) Class.forName(clzName).newInstance();
 			return c.getTranCode(tempBuffer);
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
@@ -287,14 +286,18 @@ public class Resolver {
 		try {
 			TranDecryptImpl c = (TranDecryptImpl) Class.forName(clzName).newInstance();
 			return c.decrypt(tempBuffer);
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	private ChannelBuffer packetRes(ResponseInfo responseInfo, String ip) {
+		logger.warn("目的服务系统IP映射不存在，请查看配置文件server.properties中是否配置[{}]的值!", ip);
+		responseInfo.setRet_code("1");
+		responseInfo.setRet_msg("目的服务系统IP映射不存在，请查看配置文件server.properties中是否配置[" + ip+ "]的值!");
+		logger.info("返回异常响应报文");
+		return ResponseMsg.packRepMsg(responseInfo);
 	}
 	
 }

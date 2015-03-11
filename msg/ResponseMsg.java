@@ -15,7 +15,7 @@ public class ResponseMsg {
 	public static ChannelBuffer packRepMsg(ResponseInfo info) {
 		ChannelBuffer buffer = ChannelBuffer.allocate(10240);
 		if(logger.isDebugEnabled()) {
-			logger.debug("返回数据内容：\n{}", info);
+			logger.debug("旁路解析结果：\n{}", info);
 		}
 //		buffer.putInt(0);
 		putIntAttr(buffer, "msg_id", info.getMsg_id());

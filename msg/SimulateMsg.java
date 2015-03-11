@@ -29,7 +29,7 @@ public class SimulateMsg {
 	// packet_type 报文类型（1-请求，2-响应） 整型
 	private static int packet_type = 1;
 	// match_id 报文匹配ID 短字符串
-	private static String match_id = "0808";
+//	private static String match_id = "0808";
 	// send_time 发送时间 短字符串
 	private static String send_time = getTime();
 	// has_ack 是否收到对方ACK 整型
@@ -48,7 +48,7 @@ public class SimulateMsg {
 		putStringAttr("dst_ip", dst_ip);
 		putIntAttr("dst_prot", dst_port);
 		putIntAttr("packet_type", packet_type);
-		putStringAttr("match_id", match_id);
+//		putStringAttr("match_id", match_id);
 		putStringAttr("send_time", send_time);
 		putIntAttr("has_ack", has_ack);
 		putStringAttr("ack_time", ack_time);
@@ -119,18 +119,18 @@ public class SimulateMsg {
 		dst_ip = "127.0.0.1";
 		dst_port = 8883;
 		packet_type = 1;
-		match_id = "806010buffer";
+//		match_id = "806010buffer";
 		return packRequestBuffer(BufferReader.createRequestMsg("806010"));
 	}
 	
 	public static ChannelBuffer proBuffer806010resp() {
 		msg_id = 8060102;
-		src_ip = "123.123.123.86";
-		src_port = 80601;
-		dst_ip = "127.0.0.1";
-		dst_port = 8883;
+		src_ip= "127.0.0.1";
+		src_port= 8883;
+		dst_ip = "123.123.123.86";
+		dst_port = 80601;
 		packet_type = 2;
-		match_id = "806010buffer";
+//		match_id = "806010buffer";
 		return packRequestBuffer(BufferReader.createRequestMsg("806010"));
 	}
 	
@@ -141,18 +141,18 @@ public class SimulateMsg {
 		dst_ip = "127.0.0.1";
 		dst_port = 8885;
 		packet_type = 1;
-		match_id = "8813buffer";
+//		match_id = "8813buffer";
 		return packRequestBuffer(BufferReader.createRequestMsg("8813req"));
 	}
 	
 	public static ChannelBuffer proBuffer8813resp() {
 		msg_id = 88131;
-		src_ip = "123.123.123.123";
-		src_port = 88131;
-		dst_ip = "127.0.0.1";
-		dst_port = 8885;
+		src_ip = "127.0.0.1";
+		src_port = 8885;
+		dst_ip = "123.123.123.123";
+		dst_port = 88131;
 		packet_type = 2;
-		match_id = "8813buffer";
+//		match_id = "8813buffer";
 		return packRequestBuffer(BufferReader.createRequestMsg("8813resp"));
 	}
 	
