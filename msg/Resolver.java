@@ -57,7 +57,9 @@ public class Resolver {
 				ret_msg = "拆请求报文成功";
 			}else if(typeFlag == 2){
 				logger.info("报文类型：[{}]", "response");
-				String unpackedServer = MsgContainer.getUnpackedServerCode(info.getMatch_id());
+				String key = info.getDst_ip() + "+" + info.getDst_prot() + 
+						info.getSrc_ip() + "+" + info.getSrc_port();
+				String unpackedServer = MsgContainer.getUnpackedServerCode(key);
 				if(unpackedServer != null) {
 					logger.info("收到已经解析过有对应请求报文的响应报文,根据请求报文拆包");
 					unpackResponseMsg(info, server);
@@ -65,7 +67,7 @@ public class Resolver {
 				}else {
 					ret_code = "6";
 					ret_msg = "收到无对应请求报文的响应报文,暂时保存,不拆包.";
-					MsgContainer.putResponseMsg(info);
+					MsgContainer.putResponseMsg(key, info);
 					loggermsg = ret_msg;
 				}
 			}else {
@@ -105,6 +107,7 @@ public class Resolver {
 	}
 	
 	public void unpackRequestMsg(PacketsInfo info, String server) {
+		String key = "";
 		try {
 			PacketChannelBuffer buffer;
 			String decClz = DecryptServerConf.getRequestDecClz(server);
@@ -165,15 +168,18 @@ public class Resolver {
 //			client.send(new JSONMsg(data));
 			
 			//记录已经解析过的请求报文match_id : server：服务系统编码；sys_service_code：交易码；send_sys:发送渠道编码
-			MsgContainer.putUnpackedServerCode(info.getMatch_id(), server+">"+sys_service_code+">"+send_sys);
+//			MsgContainer.putUnpackedServerCode(info.getMatch_id(), server+">"+sys_service_code+">"+send_sys);
+			key = info.getSrc_ip() + "+" + info.getSrc_port() + "+"
+					+ info.getDst_ip() + "+" + info.getDst_prot();
+			MsgContainer.putUnpackedServerCode(key, server+">"+sys_service_code+">"+send_sys);
 			//记录已经解析过的请求报文的报文体的配置，供相应的响应报文体拆包
 			if(bodyConfig != null)
-				MsgContainer.putUnpackedBodyConf(info.getMatch_id(), bodyConfig);
+				MsgContainer.putUnpackedBodyConf(key, bodyConfig);
 		} catch (Exception e) {
 			throw new UnpackRequestException(e);
 		}
 		//根据match_id判断之前是否收到响应报文，如果收到则解析
-		PacketsInfo respInfo = MsgContainer.getResponseMsg(info.getMatch_id());
+		PacketsInfo respInfo = MsgContainer.getResponseMsg(key);
 		if (respInfo != null) {
 			logger.info("拆请求报文对应的响应报文");
 			unpackResponseMsg(respInfo, server);
@@ -185,6 +191,8 @@ public class Resolver {
 	public void unpackResponseMsg(PacketsInfo info, String server) {
 		ServiceData data = info.getData();
 		ServiceData tran_data = new ServiceData();
+		String key = info.getDst_ip() + "+" + info.getDst_prot() + 
+				info.getSrc_ip() + "+" + info.getSrc_port();
 		try {
 			PacketChannelBuffer buffer;
 			String decClz = DecryptServerConf.getResponseDecClz(server);
@@ -201,7 +209,7 @@ public class Resolver {
 			logger.info("拆响应头后,报文:[\n{}\n]", tran_data);
 			//if need unpacket body
 			if(buffer.readableBytes() > 0) {
-				PackageConfig bodyConfig = MsgContainer.getUnpackedBodyConf(info.getMatch_id());
+				PackageConfig bodyConfig = MsgContainer.getUnpackedBodyConf(key);
 				StructConfig respBodyConfig = bodyConfig.getResponseConfig();
 				respBodyConfig.getPackageMode().unpack(buffer, respBodyConfig, tran_data, buffer.readableBytes());
 				logger.info("拆响应体后,报文:[\n{}\n]", tran_data);
@@ -211,7 +219,7 @@ public class Resolver {
 		} catch (Exception e) {
 			throw new UnpackResponseException(e);
 		}
-		String sys_infoStr = MsgContainer.getUnpackedServerCode(info.getMatch_id());
+		String sys_infoStr = MsgContainer.getUnpackedServerCode(key);
 		String[] sys_info = sys_infoStr.split(">");
 		if(sys_info.length != 3) {
 			throw new SystemException("拆响应报文时组包异常").addScene("sys_infoStr", sys_infoStr);
@@ -230,9 +238,11 @@ public class Resolver {
 	}
 	
 	private void removeInfo(PacketsInfo info) {
-		MsgContainer.removeResponseMsg(info.getMatch_id());
-		MsgContainer.removeUnpackedConf(info.getMatch_id());
-		MsgContainer.removeUnpackedBodyConf(info.getMatch_id());
+		String key = info.getDst_ip() + "+" + info.getDst_prot() + 
+				info.getSrc_ip() + "+" + info.getSrc_port();
+		MsgContainer.removeResponseMsg(key);
+		MsgContainer.removeUnpackedConf(key);
+		MsgContainer.removeUnpackedBodyConf(key);
 	}
 	
 	private String getTranCode(ServiceData data, String server) {
@@ -245,7 +255,7 @@ public class Resolver {
 		if(index < 0) {
 			return data.getString(tranCodeExpr);
 		}else  {
-			return getTranCode(
+			return _getTranCode(
 					data.getServiceData(tranCodeExpr.substring(0, index)),
 					tranCodeExpr.substring(index + 1));
 		}

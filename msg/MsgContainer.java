@@ -28,8 +28,8 @@ public class MsgContainer {
 	* @description 保存先于请求收到的响应报文,key:match_id,value:响应报文
 	* @param info
 	*/
-	public static void putResponseMsg(PacketsInfo info) {
-		respMsgs.put(info.getMatch_id(), info);
+	public static void putResponseMsg(String key, PacketsInfo info) {
+		respMsgs.put(key, info);
 	}
 	
 	/**
