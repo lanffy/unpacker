@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.wk.eai.config.PackageConfig;
 
 /**
- * @description 报文容器工具
+ * @description 报文容器
  * @author raoliang
  * @version 2015年2月10日 上午10:41:15
  */
@@ -23,6 +23,20 @@ public class MsgContainer {
 	 * 保存已经解析过的请求报文的报文体配置，包括请求和响应
 	 */
 	private static final ConcurrentHashMap<String, PackageConfig> bodyConfigs = new ConcurrentHashMap<String, PackageConfig>();
+	
+	/**
+	 * 保存已经解析过的报文
+	 */
+	private static final ConcurrentHashMap<String, PacketsInfo> unpackedReqPacket = new ConcurrentHashMap<String, PacketsInfo>();
+	
+	public static void putUnpackedReqPacket(String key, PacketsInfo info) {
+		unpackedReqPacket.put(key, info);
+	}
+	
+	public static ConcurrentHashMap<String, PacketsInfo> getUnpackedReqPacket() {
+		return unpackedReqPacket;
+	}
+	
 	
 	/**
 	* @description 保存先于请求收到的响应报文,key:match_id,value:响应报文
@@ -87,6 +101,10 @@ public class MsgContainer {
 	
 	public static void removeUnpackedBodyConf(String match_id) {
 		bodyConfigs.remove(match_id);
+	}
+	
+	public static void removeUnpackedReqPacket(String key) {
+		unpackedReqPacket.remove(key);
 	}
 	
 	

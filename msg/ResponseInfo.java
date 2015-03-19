@@ -53,7 +53,7 @@ public class ResponseInfo {
 	}
 	
 	private static String getTime() {
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm.sss");//设置日期格式
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");//设置日期格式
 		return df.format(new Date());// new Date()为获取当前系统时间
 	}
 	

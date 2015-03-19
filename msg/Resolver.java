@@ -6,21 +6,23 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import resolver.conf.ChannelDistConf;
-import resolver.conf.TransConfigs;
 import resolver.conf.DecryptServerConf;
 import resolver.conf.Servers;
+import resolver.conf.TransConfigs;
 import resolver.conf.TransDistinguishConf;
 import resolver.excption.UnpackRequestException;
 import resolver.excption.UnpackResponseException;
 import resolver.msg.impl.TranCodeImpl;
 import resolver.msg.impl.TranDecryptImpl;
 
+import com.wk.SystemConfig;
 import com.wk.conv.PacketChannelBuffer;
 import com.wk.conv.config.StructConfig;
 import com.wk.eai.config.PackageConfig;
 import com.wk.lang.SystemException;
 import com.wk.logging.Log;
 import com.wk.logging.LogFactory;
+import com.wk.net.JSONMsg;
 import com.wk.nio.ChannelBuffer;
 import com.wk.sdo.ServiceData;
 
@@ -31,6 +33,8 @@ import com.wk.sdo.ServiceData;
  */
 public class Resolver {
 	private final Log logger = LogFactory.getLog();
+	private static final SystemConfig config = SystemConfig.getInstance();
+	private static final Boolean isSendMsg = config.getBoolean("isSendMsg", false);
 	private final SendClient client = new SendClient();
 	
 	public ChannelBuffer unpackeTranBuffer(PacketsInfo info, ResponseInfo responseInfo) {
@@ -168,13 +172,16 @@ public class Resolver {
 				logger.debug("被传输的请求数据：\n{}", data);
 			}
 			//TODO: 此处调用转发data的方法
-//			client.send(new JSONMsg(data));
+			if(isSendMsg) {
+				client.send(new JSONMsg(data));
+			}
 			
 			//记录已经解析过的请求报文match_id : server：服务系统编码；sys_service_code：交易码；send_sys:发送渠道编码
-//			MsgContainer.putUnpackedServerCode(info.getMatch_id(), server+">"+sys_service_code+">"+send_sys);
 			key = info.getSrc_ip() + "+" + info.getSrc_port() + "+"
 					+ info.getDst_ip() + "+" + info.getDst_prot();
 			MsgContainer.putUnpackedServerCode(key, server+">"+sys_service_code+">"+send_sys);
+			//保存已经处理过的请求报文
+			MsgContainer.putUnpackedReqPacket(key, info);
 			//记录已经解析过的请求报文的报文体的配置，供相应的响应报文体拆包
 			if(bodyConfig != null)
 				MsgContainer.putUnpackedBodyConf(key, bodyConfig);
@@ -235,8 +242,9 @@ public class Resolver {
 			logger.debug("被传输的响应数据：\n{}", data);
 		}
 		//TODO: 此处调用转发data的方法
-//		client.send(new JSONMsg(data));
-		
+		if(isSendMsg) {
+			client.send(new JSONMsg(data));
+		}
 		removeInfo(info);
 	}
 	
@@ -246,6 +254,7 @@ public class Resolver {
 		MsgContainer.removeResponseMsg(key);
 		MsgContainer.removeUnpackedConf(key);
 		MsgContainer.removeUnpackedBodyConf(key);
+		MsgContainer.removeUnpackedReqPacket(key);
 	}
 	
 	private String getTranCode(ServiceData data, String server) {
