@@ -1,5 +1,6 @@
 package resolver;
 
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 
 import resolver.conf.ChannelDistConf;
@@ -13,7 +14,9 @@ import resolver.msg.PacketsInfo;
 import resolver.msg.Resolver;
 import resolver.msg.ResponseInfo;
 import resolver.msg.ResponseMsg;
+import resolver.msg.TimeOutExcpDetectTask;
 
+import com.wk.SystemConfig;
 import com.wk.actor.Actor;
 import com.wk.conv.PacketChannelBuffer;
 import com.wk.logging.Log;
@@ -24,6 +27,7 @@ import com.wk.net.Request;
 import com.wk.net.ServerCommManager;
 import com.wk.nio.ChannelBuffer;
 import com.wk.sdo.ServiceData;
+import com.wk.threadpool.ThreadPool;
 
 /**
  * @description
@@ -34,6 +38,8 @@ import com.wk.sdo.ServiceData;
 public class Receiver {
 	
 	protected static final Log logger = LogFactory.getLog();
+	private static final SystemConfig config = SystemConfig.getInstance();
+	private static final int timeOutDetectInterval = config.getInt("resolver.timeOutDetectInterval", 5000);
 	
 	public static void main(String[] args) throws Exception {
 		logger.info("begin start...");
@@ -44,6 +50,7 @@ public class Receiver {
 		ModeLoader.load();
 		TranConfigLoader.load();
 		new Receiver();
+		ThreadPool.getThreadPool().executeAt(new TimeOutExcpDetectTask(), new Date(), timeOutDetectInterval);
 		logger.info("listening...");
 		System.out.println("listening");
 		Thread.sleep(Integer.MAX_VALUE);

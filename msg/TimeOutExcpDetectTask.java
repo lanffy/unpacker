@@ -9,30 +9,43 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.wk.SystemConfig;
+import com.wk.logging.Log;
+import com.wk.logging.LogFactory;
 import com.wk.net.JSONMsg;
 import com.wk.sdo.ServiceData;
 import com.wk.threadpool.Task;
+import com.wk.threadpool.ThreadPool;
 
 /**
  * @description 检测请求是否收到响应
  * @author raoliang
  * @version 2015年3月19日 下午2:58:56
  */
-public class TimeOutExcpDetect extends Task{
+public class TimeOutExcpDetectTask extends Task{
+	
+	protected static final Log logger = LogFactory.getLog();
 	private static final SystemConfig config = SystemConfig.getInstance();
-	private static final int timeOut = config.getInt("timeOut", 30000);
-	private static final Boolean isSendMsg = config.getBoolean("isSendMsg", false);
+	private static final int timeOut = config.getInt("resolver.timeOut", 30000);
+	private static final Boolean isSendMsg = config.getBoolean("resolver.isSendMsg", false);
 	private final SendClient client = new SendClient();
 
 	public static void main(String[] args) {
-		String begin = "2015-03-11 23:59:01.111";
-		String end = "2015-03-12 00:00:01.666";
-//		String end = getTime();
-//		System.out.println(end);
-		countTime(begin, end);
+		ThreadPool.getThreadPool().executeAt(new TimeOutExcpDetectTask(), new Date(), 5000);
+		try {
+			Thread.sleep(Integer.MAX_VALUE);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void execute() {
+		if(logger.isDebugEnabled()) {
+			logger.debug("检测是否有超时的请求...");
+		}
+		doDetect();
+	}
+	
+	private void doDetect() {
 		String end = getTime();
 		ConcurrentHashMap<String, PacketsInfo> unpackedReqPacket = MsgContainer.getUnpackedReqPacket();
 		List<String> timeOutKey = new ArrayList<String>();
@@ -54,6 +67,7 @@ public class TimeOutExcpDetect extends Task{
 			MsgContainer.removeUnpackedConf(key);
 			MsgContainer.removeUnpackedBodyConf(key);
 			MsgContainer.removeUnpackedReqPacket(key);
+			logger.info("请求报文等待响应超时,key -> [{}]", key);
 		}
 	}
 	
@@ -72,7 +86,6 @@ public class TimeOutExcpDetect extends Task{
 		try {
 			Date begin_time = df.parse(begin);
 			Date end_time = df.parse(end);
-			System.out.format("begin time:%s, end time:%s.\n", begin_time, end_time);
 			countTime = (end_time.getTime() - begin_time.getTime());
 		} catch (ParseException e) {
 			e.printStackTrace();

@@ -34,7 +34,7 @@ import com.wk.sdo.ServiceData;
 public class Resolver {
 	private final Log logger = LogFactory.getLog();
 	private static final SystemConfig config = SystemConfig.getInstance();
-	private static final Boolean isSendMsg = config.getBoolean("isSendMsg", false);
+	private static final Boolean isSendMsg = config.getBoolean("resolver.isSendMsg", false);
 	private final SendClient client = new SendClient();
 	
 	public ChannelBuffer unpackeTranBuffer(PacketsInfo info, ResponseInfo responseInfo) {
