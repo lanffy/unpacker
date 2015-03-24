@@ -51,6 +51,8 @@
 >resolver.isSendMsg:是否发送旁路解析结果
 >resolver.timeOut:交易超市时间,若旁路解析收到一笔请求报文，但在该时间后没有收到响应的响应报文，则判定该请求已经超时。
 >resolver.timeOutDetectInterval:检测超时时间间隔，每隔多少时间检测是否有请求超时
+
+
 ###异常信息处理
 - - - 
 <table border="1">
