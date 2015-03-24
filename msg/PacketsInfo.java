@@ -40,9 +40,9 @@ public class PacketsInfo {
 		return data.getString("dst_ip");
 	}
 	
-	// dst_prot 接收系统连接端口 整型
-	public int getDst_prot() {
-		return data.getInt("dst_prot");
+	// dst_port 接收系统连接端口 整型
+	public int getDst_port() {
+		return data.getInt("dst_port");
 	}
 	
 	// packet_type 报文类型（请求、响应） 整型
@@ -98,8 +98,8 @@ public class PacketsInfo {
 	private int src_port;
 	// dst_ip 接收系统IP 短字符串
 	private String dst_ip;
-	// dst_prot 接收系统连接端口 整型
-	private int dst_prot;
+	// dst_port 接收系统连接端口 整型
+	private int dst_port;
 	// packet_type 报文类型（请求、响应） 整型
 	private int packet_type;
 	// match_id 报文匹配ID 短字符串

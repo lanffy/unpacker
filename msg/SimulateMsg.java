@@ -46,7 +46,7 @@ public class SimulateMsg {
 		putStringAttr("src_ip", src_ip);
 		putIntAttr("src_port", src_port);
 		putStringAttr("dst_ip", dst_ip);
-		putIntAttr("dst_prot", dst_port);
+		putIntAttr("dst_port", dst_port);
 		putIntAttr("packet_type", packet_type);
 //		putStringAttr("match_id", match_id);
 		putStringAttr("send_time", send_time);

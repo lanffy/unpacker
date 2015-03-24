@@ -52,17 +52,21 @@ public class TimeOutExcpDetectTask extends Task{
 		String begin = "";
 		for(Entry<String, PacketsInfo> map : unpackedReqPacket.entrySet()) {
 			begin = map.getValue().getSend_time();
+			long counttime = countTime(begin, end);
+			if(logger.isDebugEnabled()) {
+				logger.debug("time begin: -> [{}], time end : -> [{}]", begin, end);
+				logger.debug("countTime: -> [{}], timeOut: -> [{}]", counttime, timeOut);
+			}
 			if(countTime(begin, end) > timeOut) {
 				timeOutKey.add(map.getKey());
 			}
 		}
-		
 		for(String key : timeOutKey) {
 			ServiceData data = getResultData(unpackedReqPacket.get(key));
+			data.putString("packet_type", "2");
 			if(isSendMsg) {
 				client.send(new JSONMsg(data));
 			}
-			
 			MsgContainer.removeResponseMsg(key);
 			MsgContainer.removeUnpackedConf(key);
 			MsgContainer.removeUnpackedBodyConf(key);

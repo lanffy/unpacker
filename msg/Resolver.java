@@ -47,7 +47,7 @@ public class Resolver {
 		try {
 			if(typeFlag == 1) {
 				logger.info("报文类型：[{}]", "request");
-				ip = info.getDst_ip() + "+" + info.getDst_prot();
+				ip = info.getDst_ip() + "+" + info.getDst_port();
 				server = Servers.getServerByIp(ip);
 				if(server == null) {
 					return packetRes(responseInfo, ip);
@@ -64,7 +64,7 @@ public class Resolver {
 					return packetRes(responseInfo, ip);
 				}
 				logger.info("收到来自ip:[{}]的报文，发往渠道系统:[{} -> {}]", info.getSrc_ip(), info.getDst_ip(), server);
-				String key = info.getDst_ip() + "+" + info.getDst_prot() + "+" + 
+				String key = info.getDst_ip() + "+" + info.getDst_port() + "+" + 
 						info.getSrc_ip() + "+" + info.getSrc_port();
 				String unpackedServer = MsgContainer.getUnpackedServerCode(key);
 				if(unpackedServer != null) {
@@ -156,7 +156,7 @@ public class Resolver {
 			}
 			//根据接收系统ip和发送系统ip确定发送渠道名称
 			String send_sys_expr = info.getSrc_ip() + "+" + info.getDst_ip()
-					+ "+" + info.getDst_prot();
+					+ "+" + info.getDst_port();
 			String send_sys = ChannelDistConf.getChannelName(send_sys_expr);
 			if(send_sys == null) {
 				logger.error("识别发送渠道失败,请查看配置文件channels.properites文件中是否配置[{}]的值.", send_sys_expr);
@@ -178,7 +178,7 @@ public class Resolver {
 			
 			//记录已经解析过的请求报文match_id : server：服务系统编码；sys_service_code：交易码；send_sys:发送渠道编码
 			key = info.getSrc_ip() + "+" + info.getSrc_port() + "+"
-					+ info.getDst_ip() + "+" + info.getDst_prot();
+					+ info.getDst_ip() + "+" + info.getDst_port();
 			MsgContainer.putUnpackedServerCode(key, server+">"+sys_service_code+">"+send_sys);
 			//保存已经处理过的请求报文
 			MsgContainer.putUnpackedReqPacket(key, info);
@@ -201,7 +201,7 @@ public class Resolver {
 	public void unpackResponseMsg(PacketsInfo info, String server) {
 		ServiceData data = info.getData();
 		ServiceData tran_data = new ServiceData();
-		String key = info.getDst_ip() + "+" + info.getDst_prot() + "+" + 
+		String key = info.getDst_ip() + "+" + info.getDst_port() + "+" + 
 				info.getSrc_ip() + "+" + info.getSrc_port();
 		try {
 			PacketChannelBuffer buffer;
@@ -249,7 +249,7 @@ public class Resolver {
 	}
 	
 	private void removeInfo(PacketsInfo info) {
-		String key = info.getDst_ip() + "+" + info.getDst_prot() + "+" + 
+		String key = info.getDst_ip() + "+" + info.getDst_port() + "+" + 
 				info.getSrc_ip() + "+" + info.getSrc_port();
 		MsgContainer.removeResponseMsg(key);
 		MsgContainer.removeUnpackedConf(key);

@@ -24,7 +24,7 @@ public class SendClient {
 	}
 	
 	private ClientCommManager getServerCommManager(){
-		return CommManagers.getClientCommManager("sendClient", JSONMsg.class, com.wk.net.NullResponseActor.class);
+		return CommManagers.getClientCommManager("sendClient", ChannelBufferMsg.class, com.wk.net.NullResponseActor.class);
 	}
 	
 	public void send(Msg msg) {
