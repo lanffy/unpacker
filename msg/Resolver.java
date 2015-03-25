@@ -142,7 +142,7 @@ public class Resolver {
 						.addScene("config_file", "tranDist.properties").addScene("Server", server);
 				}
 			}
-			logger.info("获取交易码：{}", sys_service_code);
+			logger.info("取得交易码：{}", sys_service_code);
 			
 			//if need unpacket body
 			PackageConfig bodyConfig = null;
@@ -171,7 +171,6 @@ public class Resolver {
 			if(logger.isDebugEnabled()) {
 				logger.debug("被传输的请求数据：\n{}", data);
 			}
-			//TODO: 此处调用转发data的方法
 			if(isSendMsg) {
 				client.send(new JSONMsg(data));
 			}
@@ -205,6 +204,8 @@ public class Resolver {
 				info.getSrc_ip() + "+" + info.getSrc_port();
 		try {
 			PacketChannelBuffer buffer;
+			//如果你正在重构下面解密的功能，这里的解密和请求报文中的解密处理是一样的，如果请求和响应的解密处理不同
+			//那么只需要重新按照请求的处理方式新增一个响应解密处理接口即可
 			String decClz = DecryptServerConf.getResponseDecClz(server);
 			if(decClz != null) {
 				buffer = new PacketChannelBuffer(decryptBuffer(decClz, new PacketChannelBuffer(info.getPacket())));
@@ -241,7 +242,6 @@ public class Resolver {
 		if(logger.isDebugEnabled()) {
 			logger.debug("被传输的响应数据：\n{}", data);
 		}
-		//TODO: 此处调用转发data的方法
 		if(isSendMsg) {
 			client.send(new JSONMsg(data));
 		}
@@ -285,9 +285,8 @@ public class Resolver {
 			TranCodeImpl c = (TranCodeImpl) Class.forName(clzName).newInstance();
 			return c.getTranCode(tempBuffer);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new SystemException("SYS_GET_TRANCODE_ERROR").addScene("clzName", clzName);
 		}
-		return null;
 	}
 	
 	private ChannelBuffer decryptBuffer(String clzName, ChannelBuffer buffer) {
@@ -296,9 +295,8 @@ public class Resolver {
 			TranDecryptImpl c = (TranDecryptImpl) Class.forName(clzName).newInstance();
 			return c.decrypt(tempBuffer);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new SystemException("SYS_DECRYPT_BUFFER_ERROR").addScene("clzName", clzName);
 		}
-		return null;
 	}
 	
 	private ChannelBuffer packetRes(ResponseInfo responseInfo, String ip) {
