@@ -100,14 +100,13 @@ public class SimulateMsg {
 	}
 	
 	public static void main(String[] args) {
-//		ChannelBuffer sendedBuffer = BufferReader.createRequestMsg("807030");
-		
 //		ChannelBuffer buffer = proBuffer8813req();
 //		ChannelBuffer buffer = proBuffer8813resp();
 //		ChannelBuffer buffer = proBuffer806010req();
-		ChannelBuffer buffer = proBuffer806010resp();
+//		ChannelBuffer buffer = proBuffer806010resp();
+		ChannelBuffer buffer = proBufferJxreq();
 		System.out.println(buffer.toHexString());
-		System.out.println(buffer.readableBytes());
+		System.out.println(buffer.readableBytes() + " ======");
 		System.out.println(buffer.capacity());
 	}
 	
@@ -119,7 +118,6 @@ public class SimulateMsg {
 		dst_ip = "127.0.0.1";
 		dst_port = 8883;
 		packet_type = 1;
-//		match_id = "806010buffer";
 		return packRequestBuffer(BufferReader.createRequestMsg("806010"));
 	}
 	
@@ -130,7 +128,6 @@ public class SimulateMsg {
 		dst_ip = "123.123.123.86";
 		dst_port = 80601;
 		packet_type = 2;
-//		match_id = "806010buffer";
 		return packRequestBuffer(BufferReader.createRequestMsg("806010"));
 	}
 	
@@ -141,7 +138,6 @@ public class SimulateMsg {
 		dst_ip = "127.0.0.1";
 		dst_port = 8885;
 		packet_type = 1;
-//		match_id = "8813buffer";
 		return packRequestBuffer(BufferReader.createRequestMsg("8813req"));
 	}
 	
@@ -152,9 +148,30 @@ public class SimulateMsg {
 		dst_ip = "123.123.123.123";
 		dst_port = 88131;
 		packet_type = 2;
-//		match_id = "8813buffer";
 		return packRequestBuffer(BufferReader.createRequestMsg("8813resp"));
 	}
+	
+	public static ChannelBuffer proBufferJxreq() {
+		msg_id = 1111;
+		src_ip = "127.0.0.1";
+		src_port = 8889;
+		dst_ip = "10.1.1.227";
+		dst_port = 9211;
+		packet_type = 1;
+		return packRequestBuffer(BufferReader.createRequestMsg("jx"));
+	}
+	
+	public static ChannelBuffer proBufferJxresp() {
+		msg_id = 1111;
+		src_ip = "10.1.1.227";
+		src_port = 9211;
+		dst_ip = "127.0.0.1";
+		dst_port = 8889;
+		packet_type = 2;
+		return packRequestBuffer(BufferReader.createRequestMsg("jx"));
+	}
+	
+	
 	
 	public static String getTime() {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");//设置日期格式

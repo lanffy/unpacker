@@ -24,7 +24,8 @@
 4. config/resolverConf/server.properties
 >接收报文服务系统识别配置文件
 >>Ip地址和端口与对应的服务系统映射保存在server.properties 文件中,每行表示一条映射,格式为:ip+port=serverCode,
->>其中ip+port和serverCode分别为config/resolverConf/Server文件中的SERVER\_CODE和REMOTE\_ADDRESS,
+>>其中ip+port分别表示目的ip和端口，既config/resolverConf/Server文件中的REMOTE_ADDRESS，
+>>serverCode为相应文件中的SERVER\_CODE，
 >>如果REMOTE\_ADDRESS有多个值被逗号分割,则分多行配置.
 
 5. config/resolverConf/tranDist.properties
@@ -39,7 +40,9 @@
 
 6. config/resolverConf/channels.properties
 >发送报文渠道识别配置文件
->>每行表示一个渠道映射配置.保存格式为：<code>src\_ip+dst\_ip+dst\_port=渠道名称</code>.<code>src\_ip</code>:发送报文系统ip;<ode>dst\_ip</code>:接收报文系统ip;<code>dst\_port</code>:接收报文系统端口
+>>每行表示一个渠道映射配置.
+>>保存格式为：<code>src\_ip+dst\_ip+dst\_port=渠道名称</code>.
+>>其中，<code>src\_ip</code>:发送报文系统ip;<ode>dst\_ip</code>:接收报文系统ip;<code>dst\_port</code>:接收报文系统端口
 
 7. config/resolverConf/decrypt.properties
 >请求解密配置文件
