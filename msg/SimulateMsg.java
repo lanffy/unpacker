@@ -104,7 +104,8 @@ public class SimulateMsg {
 //		ChannelBuffer buffer = proBuffer8813resp();
 //		ChannelBuffer buffer = proBuffer806010req();
 //		ChannelBuffer buffer = proBuffer806010resp();
-		ChannelBuffer buffer = proBufferJxreq();
+//		ChannelBuffer buffer = proBufferJxreq();
+		ChannelBuffer buffer = proBufferXmlReq();
 		System.out.println(buffer.toHexString());
 		System.out.println(buffer.readableBytes() + " ======");
 		System.out.println(buffer.capacity());
@@ -169,6 +170,26 @@ public class SimulateMsg {
 		dst_port = 8889;
 		packet_type = 2;
 		return packRequestBuffer(BufferReader.createRequestMsg("jx"));
+	}
+	
+	public static ChannelBuffer proBufferXmlReq() {
+		msg_id = 1111;
+		src_ip = "127.0.0.1";
+		src_port = 8889;
+		dst_ip = "10.1.1.227";
+		dst_port = 9211;
+		packet_type = 1;
+		return packRequestBuffer(BufferReader.createRequestMsg("xml"));
+	}
+	
+	public static ChannelBuffer proBufferXmlResp() {
+		msg_id = 1111;
+		src_ip = "10.1.1.227";
+		src_port = 9211;
+		dst_ip = "127.0.0.1";
+		dst_port = 8889;
+		packet_type = 2;
+		return packRequestBuffer(BufferReader.createRequestMsg("xml"));
 	}
 	
 	
