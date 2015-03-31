@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Service>
+  <Service_Header>
+    <EXTERNAL_RULE>OFF</EXTERNAL_RULE>
+    <msg_interval>30</msg_interval>
+    <msg_expiry>36000</msg_expiry>
+    <processes currentprocess="1" nextprocess="1" total="1">
+      <process id="1">
+        <end_timestamp/>
+        <process_timestamp>2014-12-08 09:43:02.005</process_timestamp>
+        <target_q>IBM.SERVICE.REQUEST.OUT.CBS</target_q>
+        <sub_target_id/>
+        <target_id>0000</target_id>
+        <sub_service_sn>107804020031</sub_service_sn>
+        <async_reversal_service_id/>
+        <is_end>0</is_end>
+        <skip_to_process>0</skip_to_process>
+        <after_logic_class/>
+        <timeout>30000</timeout>
+        <reversal_seq>0</reversal_seq>
+        <key_service>0</key_service>
+        <status>COMPLETE</status>
+        <service_id>00000000890412</service_id>
+        <code>S0000000</code>
+        <desc>SUCCESS||交易成功</desc>
+        <requester_code/>
+        <requester_desc/>
+      </process>
+    </processes>
+    <msglog>1</msglog>
+    <timeout>30000</timeout>
+    <name>撤挂</name>
+    <channel_id>01</channel_id>
+    <common/>
+    <requester_id>0028</requester_id>
+    <route_flag/>
+    <service_id>00000000890412</service_id>
+    <service_time>2014-12-08 01:42:33.243</service_time>
+    <version_id>01</version_id>
+    <service_response/>
+    <service_sn>107804020031</service_sn>
+    <start_timestamp>2014-12-08 09:43:02.003</start_timestamp>
+  </Service_Header>
+  <Service_Body>
+    <ext_attributes>
+      <ExecGrp>EG</ExecGrp>
+      <Broker>ESB</Broker>
+      <auth_psw01/>
+      <auth_psw02/>
+      <auth_psw03/>
+      <bran_auth_teller/>
+      <cen_auth_teller01>011067</cen_auth_teller01>
+      <cen_auth_teller02/>
+      <channel_id>01</channel_id>
+      <channel_servcode>010302_1</channel_servcode>
+      <operator_id>107804</operator_id>
+      <iterate_no>00</iterate_no>
+      <mac_value/>
+      <branch_id>10670</branch_id>
+      <ori_cha_id>01</ori_cha_id>
+      <ori_cha_servcode>010302_1</ori_cha_servcode>
+      <ori_req_id>25</ori_req_id>
+      <req_serv_id>890412</req_serv_id>
+      <req_servcode>010302_1</req_servcode>
+      <requester_date>2014-10-02</requester_date>
+      <requester_id>25</requester_id>
+      <requester_sn>107804020031</requester_sn>
+      <sub_auth_teller/>
+      <terminal_id>ttyp</terminal_id>
+      <ori_req_sn>107804020031</ori_req_sn>
+      <ori_req_servcode>890412</ori_req_servcode>
+      <ori_req_timestamp>2014-10-02 09:42:09.648</ori_req_timestamp>
+      <ori_req_date>2014-10-02</ori_req_date>
+      <FirstDynamicPortApply process="1">2801</FirstDynamicPortApply>
+      <O1F1MSID process="1">DPS0000</O1F1MSID>
+      <O1F1MSGE process="1"/>
+      <O1F2NUMB process="1">0</O1F2NUMB>
+      <O1F1WKDT process="1">2014-10-02</O1F1WKDT>
+      <O1F1TRWB process="1">30011435</O1F1TRWB>
+      <O1F1WKTM process="1">09.42.18</O1F1WKTM>
+    </ext_attributes>
+    <request>
+      <I1BKACNO>106700121002738946</I1BKACNO>
+      <I1BKSANO/>
+      <I1BKACNM>钟淑珍</I1BKACNM>
+      <I1YNSQNO>140418934</I1YNSQNO>
+      <I1GSDLFG>2</I1GSDLFG>
+      <I1GSTYPE>2</I1GSTYPE>
+      <I1YSFLAG>3</I1YSFLAG>
+      <I1BKPSWD>CA7121AA614993E5</I1BKPSWD>
+      <I1BKIDTP>2</I1BKIDTP>
+      <I1BKIDNO>360729199008150948</I1BKIDNO>
+      <I1ZKFLAG>1</I1ZKFLAG>
+      <I1ZKACNM/>
+      <I1ZKIDTP/>
+      <I1ZKIDNO/>
+      <I1DLACNM/>
+      <I1DLIDTP/>
+      <I1DLIDNO/>
+      <I1DLPHON/>
+      <I1DLEDDT>0002-11-30</I1DLEDDT>
+      <I1DLADDR/>
+      <I1ZYACNM/>
+      <I1S1REMK>1</I1S1REMK>
+      <I1S2REMK/>
+      <I1S3REMK>0.00</I1S3REMK>
+    </request>
+    <response>
+      <O1S1REMK/>
+      <O1S2REMK/>
+      <O1S3REMK>0.00</O1S3REMK>
+    </response>
+  </Service_Body>
+</Service>

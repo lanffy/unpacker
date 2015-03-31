@@ -5,6 +5,8 @@ import resolver.util.BufferReader;
 import com.wk.conv.PacketChannelBuffer;
 import com.wk.conv.config.StructConfig;
 import com.wk.conv.mode.VRouterPackageMode;
+import com.wk.eai.unitepay.UnitePayXMLPackageMode;
+import com.wk.eai.unitepay.XMLPackageMode;
 import com.wk.nio.ChannelBuffer;
 import com.wk.sdo.ServiceData;
 
@@ -30,10 +32,29 @@ public class DefaultMsg{
 	}
 	
 	public static void main(String[] args) {
+		testXML();
+	}
+	
+	public static void testVrouter() {
 		ChannelBuffer buffer = BufferReader.createRequestMsg("response");
 		StructConfig config = new StructConfig(com.wk.conv.mode.Modes.getPackageMode("vrouterserver"), false);
 		ServiceData data = new ServiceData();
 		config.getPackageMode().unpack(new PacketChannelBuffer(buffer), config, data, buffer.readableBytes());
 		System.out.println("done");
+	}
+	
+	public static void testXML() {
+		ChannelBuffer buffer = BufferReader.createRequestMsg("xml2");
+		System.out.println("*****1begin*****");
+		System.out.println(buffer.toHexString());
+		System.out.println("*****1end*****");
+		UnitePayXMLPackageMode xmlMode = new XMLPackageMode("xml"); 
+		StructConfig config = new StructConfig(xmlMode, false);
+		ServiceData data = new ServiceData();
+		config.getPackageMode().unpack(new PacketChannelBuffer(buffer), config, data, buffer.readableBytes());
+		System.out.println("*****2begin*****");
+		System.out.println(data);
+		System.out.println("*****2end*****");
+		System.out.println("xml done");
 	}
 }
